@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículos de Interés | Las Estrellas te Guían</title>
+    <meta name="description"
+        content="Artículos de astrología sobre los signos del zodíaco. Descubre tu Sol, Luna y Ascendente.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --nav-text: #ffffff;
+            --main-text: #FDFBF7;
+            --btn-bg: #0f0a21;
+            --gold: #E5C07B;
+            --text-muted: #fbf5ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        @keyframes galaxyRotate {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        body {
+            background-color: #000000;
+            background-image: url('espacio_base.png');
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--main-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .galaxy-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 75vmax;
+            height: 75vmax;
+            background-image: url('nebulosa_capa.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: -1;
+            animation: galaxyRotate 900s linear infinite;
+            filter: brightness(0.6) saturate(1.1);
+            mix-blend-mode: screen;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        #interactive-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: var(--main-text);
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo-image {
+            height: 190px;
+            width: auto;
+            filter: drop-shadow(0 0 15px rgba(229, 192, 123, 0.5));
+            transition: transform 0.3s;
+        }
+
+        .logo:hover .logo-image {
+            transform: scale(1.05);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 4.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--nav-text);
+            font-size: 1.65rem;
+            font-weight: 600;
+            transition: opacity 0.3s;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--nav-text);
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .social-icons svg {
+            width: 34px;
+            height: 34px;
+            fill: var(--nav-text);
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .social-icons svg:hover {
+            opacity: 0.7;
+        }
+
+        /* Zodiac */
+        #zodiac-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes floatA {
+            0% {
+                transform: translateY(0) translateX(0)
+            }
+
+            25% {
+                transform: translateY(-18px) translateX(10px)
+            }
+
+            75% {
+                transform: translateY(-22px) translateX(6px)
+            }
+
+            100% {
+                transform: translateY(0) translateX(0)
+            }
+        }
+
+        @keyframes floatB {
+            0% {
+                transform: translateY(0) translateX(0)
+            }
+
+            30% {
+                transform: translateY(14px) translateX(-9px)
+            }
+
+            100% {
+                transform: translateY(0) translateX(0)
+            }
+        }
+
+        @keyframes floatC {
+            0% {
+                transform: translateY(0) translateX(0)
+            }
+
+            50% {
+                transform: translateY(-20px) translateX(-10px)
+            }
+
+            100% {
+                transform: translateY(0) translateX(0)
+            }
+        }
+
+        .zodiac-icon {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            cursor: grab;
+            filter: drop-shadow(0 0 5px rgba(229, 192, 123, 0.4));
+            pointer-events: auto;
+            touch-action: none;
+            opacity: 0.8;
+        }
+
+        .zodiac-icon:nth-child(1) {
+            animation: floatA 18s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(2) {
+            animation: floatB 22s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(3) {
+            animation: floatC 20s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(4) {
+            animation: floatA 24s ease-in-out infinite reverse
+        }
+
+        .zodiac-icon:nth-child(5) {
+            animation: floatB 19s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(6) {
+            animation: floatC 26s ease-in-out infinite reverse
+        }
+
+        .zodiac-icon:nth-child(7) {
+            animation: floatA 21s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(8) {
+            animation: floatB 17s ease-in-out infinite reverse
+        }
+
+        .zodiac-icon:nth-child(9) {
+            animation: floatC 23s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(10) {
+            animation: floatA 28s ease-in-out infinite
+        }
+
+        .zodiac-icon:nth-child(11) {
+            animation: floatB 15s ease-in-out infinite reverse
+        }
+
+        .zodiac-icon:nth-child(12) {
+            animation: floatC 25s ease-in-out infinite
+        }
+
+        .zodiac-icon:active {
+            cursor: grabbing
+        }
+
+        /* Main */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            padding-top: 280px;
+            padding-bottom: 6rem;
+            pointer-events: none;
+        }
+
+        main * {
+            pointer-events: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: rgba(18, 10, 35, 0.5);
+            backdrop-filter: blur(14px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 3.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .page-header p {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        /* Card */
+        .blog-card {
+            background: rgba(18, 10, 35, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+        }
+
+        .card-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, rgba(10, 5, 25, 0.7) 100%);
+        }
+
+        /* Gradient per sign */
+        .grad-aries {
+            background: linear-gradient(135deg, #5c1a1a, #9b3030, #c0562a);
+        }
+
+        .grad-geminis {
+            background: linear-gradient(135deg, #1a2b5c, #2e4a8c, #5b7fd4);
+        }
+
+        .grad-leo {
+            background: linear-gradient(135deg, #5c3a00, #a36200, #e5a820);
+        }
+
+        .grad-cancer {
+            background: linear-gradient(135deg, #0e2a4a, #1f5080, #4a9cc0);
+        }
+
+        .grad-virgo {
+            background: linear-gradient(135deg, #1a3a1a, #2e6b2e, #6db87a);
+        }
+
+        .grad-tauro {
+            background: linear-gradient(135deg, #3c2a1a, #5c3a00, #a36200);
+        }
+
+        .grad-ascendente {
+            background: linear-gradient(135deg, #1a1a3c, #2e2e6b, #4a4a8f);
+        }
+
+        .grad-luna {
+            background: linear-gradient(135deg, #0e1a2b, #1f3a5f, #3a5a8f);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--main-text);
+            line-height: 1.35;
+        }
+
+        .card-excerpt {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .card-footer {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-date {
+            font-size: 0.75rem;
+            color: rgba(253, 251, 247, 0.45);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+        }
+
+        .card-read {
+            font-size: 0.8rem;
+            color: rgba(229, 192, 123, 0.85);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: color 0.3s;
+        }
+
+        .card-read:hover {
+            color: var(--gold);
+        }
+
+        .card-read::after {
+            content: '→';
+        }
+
+        .icon-defs {
+            display: none;
+        }
+
+        @media(max-width:900px) {
+            .blog-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 2.6rem;
+            }
+        }
+
+        @media(max-width:600px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- SITE FOOTER --- */
+        .site-footer {
+            position: relative;
+            background: linear-gradient(135deg, rgba(62, 48, 117, 0.95), rgba(106, 82, 156, 0.8), rgba(154, 131, 184, 0.6));
+            backdrop-filter: blur(15px);
+            padding: 4rem 2rem 2rem;
+            color: #fff;
+            margin-top: 10rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+        }
+
+        .footer-contact {
+            text-align: center;
+        }
+
+        .footer-contact h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .footer-contact p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .footer-contact a {
+            color: #fff;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .footer-contact a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .footer-socials svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+            transition: transform 0.3s;
+        }
+
+        .footer-socials svg:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-legal {
+            text-align: right;
+        }
+
+        .footer-legal a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-legal a:hover {
+            opacity: 1;
+        }
+
+        .footer-copyright {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+
+        .footer-moon {
+            position: absolute;
+            left: 58%;
+            top: 55%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 0 15px rgba(255, 251, 211, 0.6));
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .footer-legal {
+                text-align: center;
+            }
+
+            .footer-moon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="galaxy-bg"></div>
+
+    <svg class="icon-defs">
+        <symbol id="icon-ig" viewBox="0 0 24 24">
+            <path
+                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+        </symbol>
+        <symbol id="icon-tk" viewBox="0 0 24 24">
+            <path
+                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+        </symbol>
+        <symbol id="icon-aries" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♈</text></symbol>
+        <symbol id="icon-taurus" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♉</text></symbol>
+        <symbol id="icon-gemini" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♊</text></symbol>
+        <symbol id="icon-cancer" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♋</text></symbol>
+        <symbol id="icon-leo" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♌</text></symbol>
+        <symbol id="icon-virgo" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♍</text></symbol>
+        <symbol id="icon-libra" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♎</text></symbol>
+        <symbol id="icon-scorpio" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♏</text></symbol>
+        <symbol id="icon-sagittarius" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♐</text></symbol>
+        <symbol id="icon-capricorn" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♑</text></symbol>
+        <symbol id="icon-aquarius" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♒</text></symbol>
+        <symbol id="icon-pisces" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♓</text></symbol>
+    </svg>
+
+    <canvas id="interactive-layer"></canvas>
+
+    <div id="zodiac-layer">
+        <svg class="zodiac-icon" style="top:12%;left:8%">
+            <use href="#icon-aries" />
+        </svg>
+        <svg class="zodiac-icon" style="top:28%;left:2%">
+            <use href="#icon-taurus" />
+        </svg>
+        <svg class="zodiac-icon" style="top:8%;right:12%">
+            <use href="#icon-gemini" />
+        </svg>
+        <svg class="zodiac-icon" style="top:42%;left:4%">
+            <use href="#icon-cancer" />
+        </svg>
+        <svg class="zodiac-icon" style="top:48%;right:6%">
+            <use href="#icon-leo" />
+        </svg>
+        <svg class="zodiac-icon" style="top:62%;left:12%">
+            <use href="#icon-virgo" />
+        </svg>
+        <svg class="zodiac-icon" style="top:72%;left:38%">
+            <use href="#icon-libra" />
+        </svg>
+        <svg class="zodiac-icon" style="top:66%;right:22%">
+            <use href="#icon-scorpio" />
+        </svg>
+        <svg class="zodiac-icon" style="top:85%;right:8%">
+            <use href="#icon-sagittarius" />
+        </svg>
+        <svg class="zodiac-icon" style="top:80%;left:68%">
+            <use href="#icon-capricorn" />
+        </svg>
+        <svg class="zodiac-icon" style="top:52%;left:82%">
+            <use href="#icon-aquarius" />
+        </svg>
+        <svg class="zodiac-icon" style="bottom:8%;left:18%">
+            <use href="#icon-pisces" />
+        </svg>
+    </div>
+
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="logo_silvia.png" alt="Las Estrellas te Guían" class="logo-image"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="articulos.html" class="active">Artículos de interés</a></li>
+                <li><a href="legal.html">Información legal</a></li>
+            </ul>
+        </nav>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram"><svg>
+                    <use href="#icon-ig" />
+                </svg></a>
+            <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                aria-label="TikTok"><svg>
+                    <use href="#icon-tk" />
+                </svg></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Artículos de Interés</h1>
+            <p>Descubre tu mapa interior a través de los signos del Zodíaco</p>
+        </div>
+
+        <div class="blog-grid">
+
+            <a href="blog/virgo.html" class="blog-card">
+                <div class="card-image"><img src="art_virgo.png" alt="Virgo"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Signos del Zodíaco</span>
+                    <h2 class="card-title">Virgo</h2>
+                    <p class="card-excerpt">Si eres Virgo de Sol, Luna o Ascendente este artículo te interesa. Tu misión
+                        es perfeccionar lo imperfecto.</p>
+                    <div class="card-footer">
+                        <span class="card-date">4/1/2026 - 1 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/geminis.html" class="blog-card">
+                <div class="card-image"><img src="art_geminis.png" alt="Géminis"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Signos del Zodíaco</span>
+                    <h2 class="card-title">Géminis</h2>
+                    <p class="card-excerpt">Si tienes Sol, Luna o Ascendente en Géminis, esta publicación te interesa.
+                        El mensajero de la conciencia.</p>
+                    <div class="card-footer">
+                        <span class="card-date">4/1/2026 - 1 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/leo.html" class="blog-card">
+                <div class="card-image"><img src="art_leo.png" alt="Leo"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Signos del Zodíaco</span>
+                    <h2 class="card-title">Leo</h2>
+                    <p class="card-excerpt">Si tienes Sol, Luna o Ascendente en Leo, este artículo te interesa. El
+                        portador del fuego del ser.</p>
+                    <div class="card-footer">
+                        <span class="card-date">3/31/2026 - 1 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/cancer.html" class="blog-card">
+                <div class="card-image"><img src="art_cancer.png" alt="Cáncer"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Signos del Zodíaco</span>
+                    <h2 class="card-title">Cáncer</h2>
+                    <p class="card-excerpt">Si tienes Sol, Luna o Ascendente en Cáncer, este artículo te interesa. El
+                        guardián del mundo interior.</p>
+                    <div class="card-footer">
+                        <span class="card-date">3/31/2026 - 1 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/aries.html" class="blog-card">
+                <div class="card-image"><img src="art_aries.png" alt="Aries"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Signos del Zodíaco</span>
+                    <h2 class="card-title">Aries</h2>
+                    <p class="card-excerpt">Si tienes Sol, Luna o Ascendente en Aries, este artículo te interesa. El
+                        coraje de iniciar.</p>
+                    <div class="card-footer">
+                        <span class="card-date">1/17/2026 - 3 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/el-sol.html" class="blog-card">
+                <div class="card-image"><img src="art_el_sol.png" alt="El Sol"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Astrología Consciente</span>
+                    <h2 class="card-title">El Sol – La Valentía de Ser</h2>
+                    <p class="card-excerpt">Tu centro organizador. Descubre el coraje de habitar tu identidad consciente
+                        y brillar con luz propia.</p>
+                    <div class="card-footer">
+                        <span class="card-date">1/17/2026 - 1 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/tauro.html" class="blog-card">
+                <div class="card-image"><img src="art_tauro.png" alt="Tauro"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Signos del Zodíaco</span>
+                    <h2 class="card-title">Sol en Tauro</h2>
+                    <p class="card-excerpt">El Guardián de la Sustancia y el Placer de Existir. Viniste a dar cuerpo y
+                        estabilidad a la vida.</p>
+                    <div class="card-footer">
+                        <span class="card-date">1/17/2026 - 4 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/ascendente.html" class="blog-card">
+                <div class="card-image"><img src="art_ascendente.png" alt="El Ascendente"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Camino de Aprendizaje</span>
+                    <h2 class="card-title">El Ascendente</h2>
+                    <p class="card-excerpt">Tu primera impresión y la energía que viniste a aprender. El destino como
+                        maestro de tu evolución.</p>
+                    <div class="card-footer">
+                        <span class="card-date">1/17/2026 - 2 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog/la-luna.html" class="blog-card">
+                <div class="card-image"><img src="art_la_luna.png" alt="La Luna"
+                        style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="card-body">
+                    <span class="card-tag">Refugio Emocional</span>
+                    <h2 class="card-title">La Luna</h2>
+                    <p class="card-excerpt">Nuestro refugio emocional y la memoria del pasado. Las llaves de tu mundo
+                        interior y seguridad.</p>
+                    <div class="card-footer">
+                        <span class="card-date">1/17/2026 - 3 min read</span>
+                        <span class="card-read">Leer más</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <svg class="footer-moon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,10 A40,40 0 1,0 90,50 A30,30 0 1,1 50,10 Z" fill="#fff5e6" />
+        </svg>
+        <div class="footer-content">
+            <div class="footer-empty"></div>
+            <div class="footer-contact">
+                <h2>Contacto</h2>
+                <p>Correo electrónico: <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                        target="_blank" rel="noopener noreferrer"
+                        style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank"
+                        rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+                        </svg></a>
+                    <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                        aria-label="TikTok"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+                        </svg></a>
+                </div>
+            </div>
+            <div class="footer-legal">
+                <a href="legal.html">Aviso legal (consulta las bases aquí)</a>
+                <div class="footer-copyright">© 2026. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('interactive-layer');
+        const ctx = canvas.getContext('2d');
+        let cw = canvas.width = window.innerWidth;
+        let ch = canvas.height = window.innerHeight;
+        let mouseX = -1000, mouseY = -1000;
+        let particles = [];
+        let trails = [];
+
+        // Particle class for the vortex effect
+        class Particle {
+            constructor() {
+                this.init();
+            }
+            init() {
+                this.angle = Math.random() * Math.PI * 2;
+                this.radius = Math.random() * Math.max(cw, ch) * 0.8;
+                this.speed = 0.3 + Math.random() * 1.0;
+                this.radialSpeed = 0.15 + Math.random() * 0.6;
+                this.size = 0.8 + Math.random() * 2.2;
+                this.color = `rgba(229, 192, 123, ${0.25 + Math.random() * 0.55})`;
+                this.x = cw / 2;
+                this.y = ch / 2;
+            }
+            update() {
+                this.angle += this.speed * 0.01;
+                this.radius += this.radialSpeed;
+
+                let targetX = cw / 2 + Math.cos(this.angle) * this.radius;
+                let targetY = ch / 2 + Math.sin(this.angle) * this.radius;
+
+                // Mouse Interaction: Gravity/Attraction
+                const dx = mouseX - targetX;
+                const dy = mouseY - targetY;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 250) {
+                    const force = (250 - dist) / 250;
+                    targetX += dx * force * 0.1;
+                    targetY += dy * force * 0.1;
+                }
+
+                this.x = targetX;
+                this.y = targetY;
+
+                // Reset if out of bounds
+                if (this.x < -100 || this.x > cw + 100 || this.y < -100 || this.y > ch + 100 || this.radius > Math.max(cw, ch)) {
+                    this.init();
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 350; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        const dragEls = document.querySelectorAll('.zodiac-icon');
+        let activeEl = null, initLX, initLY, initMX, initMY;
+
+        dragEls.forEach((el, index) => {
+            el.dataset.angle = (index / dragEls.length) * Math.PI * 2;
+            el.dataset.radius = 150 + Math.random() * (Math.max(cw, ch) * 0.4);
+            el.dataset.speed = 0.001 + Math.random() * 0.003;
+
+            el.addEventListener('mousedown', dragStart);
+            el.addEventListener('touchstart', dragStart, { passive: false });
+        });
+
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            trails.push({ x: mouseX, y: mouseY, alpha: 0.6, size: 2 + Math.random() * 3 });
+            drag(e);
+        });
+        document.addEventListener('touchmove', e => {
+            const t = e.touches[0];
+            mouseX = t.clientX;
+            mouseY = t.clientY;
+            drag(e);
+        }, { passive: false });
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+
+        window.addEventListener('resize', () => {
+            cw = canvas.width = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+        });
+
+        function dragStart(e) {
+            const target = e.target.closest('.zodiac-icon');
+            if (target) {
+                activeEl = target;
+                activeEl.style.zIndex = '1000';
+                const rect = activeEl.getBoundingClientRect();
+                initLX = rect.left;
+                initLY = rect.top;
+                initMX = e.touches ? e.touches[0].clientX : e.clientX;
+                initMY = e.touches ? e.touches[0].clientY : e.clientY;
+            }
+        }
+
+        function drag(e) {
+            if (!activeEl) return;
+            if (e.cancelable) e.preventDefault();
+            const curMX = e.touches ? e.touches[0].clientX : e.clientX;
+            const curMY = e.touches ? e.touches[0].clientY : e.clientY;
+            const dx = curMX - initMX;
+            const dy = curMY - initMY;
+            activeEl.style.left = (initLX + dx) + 'px';
+            activeEl.style.top = (initLY + dy) + 'px';
+            activeEl.style.right = 'auto';
+            activeEl.style.bottom = 'auto';
+        }
+
+        function dragEnd() {
+            if (activeEl) activeEl.style.zIndex = 'unset';
+            activeEl = null;
+        }
+
+        function updateZodiacIcons() {
+            if (activeEl) return;
+            dragEls.forEach(el => {
+                if (el === activeEl) return;
+                let ang = parseFloat(el.dataset.angle);
+                let rad = parseFloat(el.dataset.radius);
+                let spd = parseFloat(el.dataset.speed);
+
+                ang += spd;
+                el.dataset.angle = ang;
+
+                const tx = cw / 2 + Math.cos(ang) * rad - 20;
+                const ty = ch / 2 + Math.sin(ang) * rad - 20;
+
+                // Subtle mouse attraction for icons too
+                const dist = Math.hypot(mouseX - (tx + 20), mouseY - (ty + 20));
+                let fx = 0, fy = 0;
+                if (dist < 300) {
+                    fx = (mouseX - (tx + 20)) * 0.05;
+                    fy = (mouseY - (ty + 20)) * 0.05;
+                }
+
+                el.style.left = (tx + fx) + 'px';
+                el.style.top = (ty + fy) + 'px';
+                el.style.right = 'auto';
+                el.style.bottom = 'auto';
+            });
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, cw, ch);
+
+            // Draw Trails
+            trails = trails.filter(t => t.alpha > 0);
+            trails.forEach(t => {
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(229, 192, 123, ${t.alpha})`;
+                ctx.fill();
+                t.alpha -= 0.015;
+                t.size *= 0.98;
+            });
+
+            // Draw Particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Connections between particles
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i += 3) { // Skip some for performance
+                for (let j = i + 1; j < i + 10 && j < particles.length; j++) {
+                    const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(229, 192, 123, ${(1 - dist / 100) * 0.2})`;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            updateZodiacIcons();
+            requestAnimationFrame(render);
+        }
+
+        initParticles();
+        render();
+    </script>
+</body>
+
+</html>

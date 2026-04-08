@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrología | Viaje a las Estrellas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --nav-text: #ffffff;
+            --main-text: #FDFBF7;
+            /* Blanco roto muy brillante */
+            --btn-bg: #0f0a21;
+            /* Azul noche profundísimo para botones */
+            --gold: #E5C07B;
+            /* Dorado radiante */
+            --text-muted: #fbf5ff;
+            /* Lila ultra claro muy brillante para los párrafos */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        @keyframes driftClouds {
+            0% {
+                background-position: left center;
+            }
+
+            50% {
+                background-position: right center;
+            }
+
+            100% {
+                background-position: left center;
+            }
+        }
+
+        body {
+            /* Fondo de cielo cósmico puro para que reluzca todo el brillo original */
+            background-color: #3b1c71;
+            background-image: url('fondo_nubes.png');
+            background-size: 130vw 130vh;
+            /* Permite que el fondo tenga margen para girar/moverse */
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            animation: driftClouds 80s ease-in-out infinite;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--main-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Canvas Background para Interacciones Estelares --- */
+        #interactive-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            /* Nivel 1, por encima del background, debajo del main */
+            pointer-events: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        .title-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: var(--main-text);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            /* Resalta brutalmente los títulos del fondo */
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo-image {
+            height: 190px;
+            width: auto;
+            filter: drop-shadow(0 0 15px rgba(229, 192, 123, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-image {
+            transform: scale(1.05);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 4.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--nav-text);
+            font-size: 1.65rem;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--nav-text);
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .social-icons svg {
+            width: 34px;
+            height: 34px;
+            fill: var(--nav-text);
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+
+        .social-icons svg:hover {
+            opacity: 0.7;
+        }
+
+        /* --- Capa Zodíaco --- */
+        #zodiac-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
+            /* Por encima del fondo y el canvas, por debajo del main */
+        }
+
+        @keyframes globalFloat {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-25px) translateX(15px) rotate(10deg);
+            }
+
+            66% {
+                transform: translateY(15px) translateX(-20px) rotate(-8deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .zodiac-icon {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            cursor: grab;
+            filter: drop-shadow(0 0 5px rgba(189, 142, 36, 0.4));
+            pointer-events: auto;
+            /* Para permitir drag a través de capas */
+            touch-action: none;
+            /* Añadido movimiento continuo para que estén todos flotando solos */
+            animation: globalFloat 25s ease-in-out infinite alternate;
+        }
+
+        .zodiac-icon:active {
+            cursor: grabbing;
+        }
+
+        /* --- Layout Main --- */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            padding-top: 300px;
+            pointer-events: none;
+        }
+
+        main * {
+            /* Devuelve el click a textos y botones */
+            pointer-events: auto;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 3rem;
+            /* Espacio extra de respiro entre nav y título */
+            margin-bottom: 5rem;
+        }
+
+        .hero h1 {
+            font-size: 4.8rem;
+            /* Título mucho más imponente */
+            font-weight: 600;
+            /* Letras más gruesas y sólidas */
+            letter-spacing: 1px;
+            /* Extra de anchura en la presencia */
+            line-height: 1.15;
+            max-width: 950px;
+            /* Más espacio para las letras anchas */
+            margin-bottom: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+            font-weight: 500;
+            max-width: 550px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            color: var(--text-muted);
+            /* Texto claro para hacer contraste */
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            /* Fuerza la legibilidad sobre la foto */
+        }
+
+        .btn-primary {
+            background-color: var(--btn-bg);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* --- Sobre mí --- */
+        .sobre-mi {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            /* Menor hueco para liberar más anchura */
+            margin-bottom: 8rem;
+        }
+
+        .sobre-mi-txt {
+            flex: 1.2;
+            /* Reducido ligeramente para dar más espacio a la foto */
+            max-width: 750px;
+
+            /* Cristal texturizado mágico para perfecta lectura */
+            padding: 2.5rem;
+            background: rgba(18, 10, 35, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .sobre-mi-txt h2 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+
+        .sobre-mi-txt p {
+            font-size: 1rem;
+            /* Letra ligeramente más grande para facilitar lectura */
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            color: var(--text-muted);
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+            /* Sombrea la letra para que se recorte perfectamente en el fondo claro y texturizado */
+        }
+
+        .sobre-mi-txt p.bold-intro {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            margin-top: 1.5rem;
+        }
+
+        .sobre-mi-img-container {
+            flex: 1.3;
+            /* Aumentado para que la foto tenga más presencia visual */
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .sobre-mi-img {
+            width: 100%;
+            max-width: 580px;
+            /* Incrementado significativamente desde 440px */
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            /* Fundido radical estelar ("mimetizado"). Elimina el fondo cuadrado de la foto diluyéndola en las estrellas */
+            mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 75%);
+            -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 75%);
+            transform: scale(1.15);
+            /* Aumentado ligeramente para mayor impacto visual */
+            filter: drop-shadow(0 0 40px rgba(229, 192, 123, 0.3));
+            /* Le añadimos un aura dorada para que resalte pura magia */
+        }
+
+        /* --- Servicios --- */
+        .servicios {
+            text-align: center;
+            margin-bottom: 8rem;
+        }
+
+        .servicios h2 {
+            font-size: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .servicios-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .servicio-card {
+            text-align: center;
+            /* Centrado de todo el contenido de la tarjeta */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .servicio-card h3 {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: var(--main-text);
+        }
+
+        .servicio-card p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+            color: var(--text-muted);
+            /* Color pastel que contrasta en fondo oscuro */
+        }
+
+        .servicio-img {
+            width: 100%;
+            height: auto;
+            /* Imagen completa sin cortar */
+            display: block;
+            margin-bottom: 1.5rem;
+            /* Máscara muy suave: solo desvanece el último 10% del borde, la imagen se ve entera */
+            mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 75%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 75%, transparent 100%);
+            transition: transform 0.3s ease;
+        }
+
+        .servicio-card:hover .servicio-img {
+            transform: scale(1.02);
+        }
+
+        /* --- Chatbot de Efemérides --- */
+        #chatbot-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        #chatbot-window {
+            display: none;
+            width: 320px;
+            background: rgba(29, 27, 56, 0.95);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        #chatbot-window.open {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #1d1b38, #3b3552);
+            padding: 15px;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(229, 192, 123, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-close {
+            cursor: pointer;
+            color: var(--nav-text);
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .chat-body {
+            height: 250px;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+
+        .chat-msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            line-height: 1.5;
+        }
+
+        .msg-bot {
+            background: rgba(60, 53, 82, 0.6);
+            color: var(--text-muted);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-user {
+            background: rgba(229, 192, 123, 0.15);
+            color: var(--main-text);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(229, 192, 123, 0.3);
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid rgba(229, 192, 123, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--main-text);
+            padding: 8px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .chat-input-area input::placeholder {
+            color: rgba(234, 220, 248, 0.5);
+        }
+
+        .chat-input-area button {
+            background: none;
+            border: none;
+            color: var(--gold);
+            cursor: pointer;
+            padding: 0 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .chat-input-area button:hover {
+            transform: scale(1.05);
+        }
+
+        #chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #E5C07B, #b88a44);
+            border: none;
+            box-shadow: 0 4px 20px rgba(229, 192, 123, 0.5);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        #chatbot-toggle:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Definiciones de Iconos SVG ocultas */
+        .icon-defs {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+                position: relative;
+            }
+
+            .hero {
+                margin-top: 3rem;
+            }
+
+            .sobre-mi {
+                flex-direction: column;
+            }
+
+            .servicios-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* --- SITE FOOTER --- */
+        .site-footer {
+            position: relative;
+            background: linear-gradient(135deg, rgba(62, 48, 117, 0.95), rgba(106, 82, 156, 0.8), rgba(154, 131, 184, 0.6));
+            backdrop-filter: blur(15px);
+            padding: 4rem 2rem 2rem;
+            color: #fff;
+            margin-top: 10rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+        }
+
+        .footer-empty {}
+
+        .footer-contact {
+            text-align: center;
+        }
+
+        .footer-contact h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .footer-contact p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .footer-contact a {
+            color: #fff;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .footer-contact a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .footer-socials svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+            transition: transform 0.3s;
+        }
+
+        .footer-socials svg:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-legal {
+            text-align: right;
+        }
+
+        .footer-legal a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-legal a:hover {
+            opacity: 1;
+        }
+
+        .footer-copyright {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+
+        .footer-moon {
+            position: absolute;
+            left: 58%;
+            top: 55%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 0 15px rgba(255, 251, 211, 0.6));
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .footer-legal {
+                text-align: center;
+            }
+
+            .footer-moon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <svg class="icon-defs">
+        <!-- Chica en la luna LOGO (aprox visual) -->
+        <symbol id="icon-logo" viewBox="0 0 100 100">
+            <path d="M 60,10 C 30,10 20,50 30,80 C 40,90 60,90 60,90 C 35,75 35,30 60,10 Z" fill="none"
+                stroke="var(--main-text)" stroke-width="5" stroke-linejoin="round" />
+        </symbol>
+
+        <!-- Redes Sociales -->
+        <symbol id="icon-ig" viewBox="0 0 24 24">
+            <path
+                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+        </symbol>
+        <symbol id="icon-tk" viewBox="0 0 24 24">
+            <path
+                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+        </symbol>
+
+        <!-- ZODIAC GLYPHS: Tipografía exacta como tu imagen de referencia -->
+        <symbol id="icon-aries" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♈</text></symbol>
+        <symbol id="icon-taurus" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♉</text></symbol>
+        <symbol id="icon-gemini" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♊</text></symbol>
+        <symbol id="icon-cancer" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♋</text></symbol>
+        <symbol id="icon-leo" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♌</text></symbol>
+        <symbol id="icon-virgo" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♍</text></symbol>
+        <symbol id="icon-libra" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♎</text></symbol>
+        <symbol id="icon-scorpio" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♏</text></symbol>
+        <symbol id="icon-sagittarius" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♐</text></symbol>
+        <symbol id="icon-capricorn" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♑</text></symbol>
+        <symbol id="icon-aquarius" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♒</text></symbol>
+        <symbol id="icon-pisces" viewBox="0 0 100 100"><text x="50" y="70" font-size="70"
+                font-family="'Segoe UI Symbol', Arial, sans-serif" fill="#E5C07B" text-anchor="middle">♓</text></symbol>
+    </svg>
+
+    <canvas id="interactive-layer"></canvas>
+
+    <div id="zodiac-layer">
+        <svg class="zodiac-icon" style="top: 15%; left: 10%;">
+            <use href="#icon-aries" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 25%; left: 30%;">
+            <use href="#icon-taurus" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 10%; right: 20%;">
+            <use href="#icon-gemini" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 40%; left: 5%;">
+            <use href="#icon-cancer" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 45%; right: 10%;">
+            <use href="#icon-leo" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 60%; left: 15%;">
+            <use href="#icon-virgo" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 70%; left: 40%;">
+            <use href="#icon-libra" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 65%; right: 25%;">
+            <use href="#icon-scorpio" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 85%; right: 10%;">
+            <use href="#icon-sagittarius" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 80%; left: 70%;">
+            <use href="#icon-capricorn" />
+        </svg>
+        <svg class="zodiac-icon" style="top: 50%; left: 80%;">
+            <use href="#icon-aquarius" />
+        </svg>
+        <svg class="zodiac-icon" style="bottom: 10%; left: 20%;">
+            <use href="#icon-pisces" />
+        </svg>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="logo_silvia.png" alt="Las Estrellas te Guían" class="logo-image"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="articulos.html">Artículos de interés</a></li>
+                <li><a href="legal.html">Información legal</a></li>
+            </ul>
+        </nav>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram"><svg>
+                    <use href="#icon-ig" />
+                </svg></a>
+            <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                aria-label="TikTok"><svg>
+                    <use href="#icon-tk" />
+                </svg></a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Comienza tu viaje hacia las estrellas: Consultas de Astrología y Carta Natal</h1>
+            <p class="hero-subtitle">Tu carta natal es la guía más honesta que existe.<br>Te ayudo a interpretar tu mapa
+                del cielo para que tomes decisiones en sintonía con tu propósito.</p>
+            <a href="#" class="btn-primary">Pide Cita</a>
+        </section>
+
+        <!-- Sobre Mí Section -->
+        <section class="sobre-mi">
+            <div class="sobre-mi-txt">
+                <h2>Mi camino hacia las <br>estrellas</h2>
+                <p class="bold-intro">Hola, soy <strong>Silvia</strong>.</p>
+                <p>Desde pequeña he visto el mundo como algo mágico: las estrellas, los árboles meciéndose, los pájaros
+                    mostrando la libertad con sus alas, la luna... y solía hablar durante horas con ella.</p>
+                <p>En un mundo automático, donde las emociones a veces no tienen espacio, sentí que había algo distinto
+                    en mí, que no encajaba.</p>
+                <p>Tras años de meditación, introspección y exploración autónoma de emociones, psicología, filosofía y
+                    espiritualidad, logré abrazar la astrología. Me abrió un mundo nuevo y me dio herramientas para
+                    acompañar a otras personas a conectar con su mundo interior, a entenderse y a sentirse acompañadas y
+                    comprendidas.</p>
+                <p>Si sientes que quieres conocerte mejor, entenderte más, romper patrones o enfrentar obstáculos, puedo
+                    acompañarte en este camino.</p>
+                <a href="#" class="btn-primary btn-secondary">Pide cita</a>
+            </div>
+            <div class="sobre-mi-img-container">
+                <!-- Imagen real de Silvia -->
+                <img src="chica.png" alt="Silvia" class="sobre-mi-img">
+            </div>
+        </section>
+
+        <!-- Servicios -->
+        <section class="servicios" id="servicios">
+            <h2>Mis servicios</h2>
+            <div class="servicios-grid">
+                <!-- Carta Natal -->
+                <div class="servicio-card">
+                    <img src="servicio_carta_natal.png" alt="Carta Natal" class="servicio-img">
+                    <h3>Carta Natal</h3>
+                    <p>Esta lectura es un espacio seguro para conocerte mejor y entender tus patrones desde la
+                        astrología, sin juicios y de forma práctica para tu día a día.</p>
+                </div>
+                <!-- Tránsitos -->
+                <div class="servicio-card">
+                    <img src="servicio_transitos.png" alt="Tránsitos" class="servicio-img">
+                    <h3>Tránsitos</h3>
+                    <p>Esta lectura te ayuda a entender cómo los movimientos de los planetas impactan tu día a día y a
+                        tomar decisiones más conscientes, desde la claridad y la calma, sin presiones ni expectativas
+                        externas.</p>
+                </div>
+                <!-- Consultas -->
+                <div class="servicio-card">
+                    <img src="servicio_consultas.png" alt="Consultas" class="servicio-img">
+                    <h3>Consultas</h3>
+                    <p>Esta consulta es un espacio seguro y cercano para recibir orientación clara y útil ya sea de algo
+                        que te preocupa, algo en lo que necesites profundizar o simplemente para abrirte a recibir qué
+                        mensaje principal tiene tu alma para ti.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-widget">
+        <div id="chatbot-window">
+            <div class="chat-header">
+                <span>✨ Efemérides</span>
+                <span class="chat-close" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="chat-msg msg-bot">¡Hola Silvia! Soy tu asistente estelar. Pregúntame sobre los tránsitos
+                    astrológicos de hoy o cualquier efeméride.</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Pregunta algo..." onkeypress="handleChatPress(event)">
+                <button onclick="sendChatMessage()">Enviar</button>
+            </div>
+        </div>
+        <button id="chatbot-toggle" onclick="toggleChat()" aria-label="Abrir chat">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1d1b38" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Canvas Interaction Script -->
+    <footer class="site-footer">
+        <svg class="footer-moon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,10 A40,40 0 1,0 90,50 A30,30 0 1,1 50,10 Z" fill="#fff5e6" />
+        </svg>
+        <div class="footer-content">
+            <div class="footer-empty"></div>
+            <div class="footer-contact">
+                <h2>Contacto</h2>
+                <p>Correo electrónico: <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                        target="_blank" rel="noopener noreferrer"
+                        style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank"
+                        rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+                        </svg></a>
+                    <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                        aria-label="TikTok"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+                        </svg></a>
+                </div>
+            </div>
+            <div class="footer-legal">
+                <a href="legal.html">Aviso legal (consulta las bases aquí)</a>
+                <div class="footer-copyright">© 2026. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const canvas = document.getElementById('interactive-layer');
+        const ctx = canvas.getContext('2d');
+        let cw = canvas.width = window.innerWidth;
+        let ch = canvas.height = window.innerHeight;
+
+        let mouseX = -1000;
+        let mouseY = -1000;
+        let trails = [];
+        let nodes = [];
+
+        window.addEventListener('resize', () => {
+            cw = canvas.width = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+            initNodes();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            trails.push({ x: mouseX, y: mouseY, alpha: 0.8 });
+        });
+
+        function initNodes() {
+            nodes = [];
+            for (let i = 0; i < 60; i++) {
+                nodes.push({
+                    x: Math.random() * cw,
+                    y: Math.random() * ch,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4
+                });
+            }
+        }
+
+        // Drag and Drop Zodiacs
+        const dragEls = document.querySelectorAll('.zodiac-icon');
+        let activeEl = null, initX, initY;
+
+        dragEls.forEach(el => {
+            el.addEventListener('mousedown', dragStart);
+            el.addEventListener('touchstart', dragStart, { passive: false });
+        });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+
+        function dragStart(e) {
+            if (e.target.closest('.zodiac-icon')) {
+                activeEl = e.target.closest('.zodiac-icon');
+                activeEl.style.animation = 'none'; // Pausar flotación auto durante el drag
+                activeEl.style.zIndex = '100'; // Traer al frente al agarrar
+                if (e.type === "touchstart" || e.type === "pointerdown") {
+                    initX = e.touches ? e.touches[0].clientX : e.clientX;
+                    initY = e.touches ? e.touches[0].clientY : e.clientY;
+                } else {
+                    initX = e.clientX; initY = e.clientY;
+                }
+            }
+        }
+
+        function drag(e) {
+            if (activeEl) {
+                e.preventDefault();
+                let x = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+                let y = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+                let dx = x - initX; let dy = y - initY;
+                initX = x; initY = y;
+
+                let left = parseFloat(window.getComputedStyle(activeEl).left) || 0;
+                let top = parseFloat(window.getComputedStyle(activeEl).top) || 0;
+
+                activeEl.style.left = (left + dx) + 'px';
+                activeEl.style.top = (top + dy) + 'px';
+                activeEl.style.right = 'auto';
+                activeEl.style.bottom = 'auto';
+
+                // Add powerful star trail when dragging
+                trails.push({ x: left + dx + 22, y: top + dy + 22, alpha: 1.5 });
+            } else {
+                // Subtle parallax towards mouse for non-active elements
+                dragEls.forEach(el => {
+                    let rect = el.getBoundingClientRect();
+                    let cx = rect.left + rect.width / 2;
+                    let cy = rect.top + rect.height / 2;
+                    let dist = Math.sqrt(Math.pow(mouseX - cx, 2) + Math.pow(mouseY - cy, 2));
+                    if (dist < 250) {
+                        let left = parseFloat(window.getComputedStyle(el).left) || 0;
+                        let top = parseFloat(window.getComputedStyle(el).top) || 0;
+                        el.style.left = left + (mouseX - cx) * 0.005 + 'px';
+                        el.style.top = top + (mouseY - cy) * 0.005 + 'px';
+                        if (Math.random() > 0.7) trails.push({ x: cx, y: cy, alpha: 0.6 });
+                    }
+                });
+            }
+        }
+
+        function dragEnd() {
+            if (activeEl) {
+                activeEl.style.animation = 'globalFloat 25s ease-in-out infinite alternate'; // Restaurar flotación
+                activeEl.style.zIndex = 'unset';
+            }
+            activeEl = null;
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, cw, ch);
+
+            // Nodes (constellations)
+            for (let i = 0; i < nodes.length; i++) {
+                let distMouse = Math.sqrt(Math.pow(mouseX - nodes[i].x, 2) + Math.pow(mouseY - nodes[i].y, 2));
+                if (distMouse < 200) {
+                    nodes[i].x += (mouseX - nodes[i].x) * 0.015;
+                    nodes[i].y += (mouseY - nodes[i].y) * 0.015;
+
+                    // Constellation line to mouse
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[i].x - (mouseX - nodes[i].x) * 0.1, nodes[i].y - (mouseY - nodes[i].y) * 0.1);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distMouse / 200})`;
+                    ctx.lineWidth = 1.0;
+                    ctx.stroke();
+                } else {
+                    nodes[i].x += nodes[i].vx;
+                    nodes[i].y += nodes[i].vy;
+                }
+
+                if (nodes[i].x < 0 || nodes[i].x > cw) nodes[i].vx *= -1;
+                if (nodes[i].y < 0 || nodes[i].y > ch) nodes[i].vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(nodes[i].x, nodes[i].y, 1.2, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(229, 192, 123, 0.6)"; /* Golden dust */
+                ctx.fill();
+
+                let connections = 0;
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let dist = Math.sqrt(Math.pow(nodes[i].x - nodes[j].x, 2) + Math.pow(nodes[i].y - nodes[j].y, 2));
+                    // Constelaciones de verdad: líneas rectas y un máximo de 2 conexiones por estrella
+                    if (dist < 130 && connections < 2) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.strokeStyle = `rgba(229, 192, 123, ${(1 - dist / 130) * 0.6})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                        connections++;
+                    }
+                }
+            }
+
+            // Trails
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "white";
+            for (let i = 0; i < trails.length; i++) {
+                ctx.beginPath();
+                ctx.arc(trails[i].x, trails[i].y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${trails[i].alpha})`;
+                ctx.fill();
+                trails[i].alpha -= 0.03;
+            }
+            ctx.shadowBlur = 0;
+            trails = trails.filter(t => t.alpha > 0);
+
+            requestAnimationFrame(render);
+        }
+
+        initNodes();
+        render();
+
+        // Chatbot Logic
+        const chatWindow = document.getElementById('chatbot-window');
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-input');
+
+        function toggleChat() {
+            if (chatWindow.classList.contains('open')) {
+                chatWindow.classList.remove('open');
+                setTimeout(() => chatWindow.style.display = 'none', 300);
+            } else {
+                chatWindow.style.display = 'flex';
+                // Trigger reflow
+                void chatWindow.offsetWidth;
+                chatWindow.classList.add('open');
+                chatInput.focus();
+            }
+        }
+
+        function handleChatPress(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function sendChatMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // User msg
+            addMsg(text, 'msg-user');
+            chatInput.value = '';
+
+            // Bot typing
+            setTimeout(() => {
+                const responses = [
+                    "Hoy la Luna transita por Tauro, es un día perfecto para conectar con tu cuerpo, comer algo rico y disfrutar de la calma material. 🌙",
+                    "El Sol está haciendo un trígono brillante con Júpiter. Siente la expansión y confía en tu intuición hoy, es tu momento de crecer. ✨",
+                    "Tenemos a Mercurio algo tenso cuadrando a Saturno. Ten mucha paciencia con las comunicaciones, respira antes de hablar. 🪐",
+                    "La energía estelar nos pide soltar el control hoy. Plutón está muy activo en la bóveda, fluye con la transformación. 🌌",
+                    "Venus está brillando en conjunción. Pon atención a las sincronías en tus relaciones hoy y valora profundamente la belleza que te rodea. 💖"
+                ];
+                let reply = responses[Math.floor(Math.random() * responses.length)];
+                addMsg(reply, 'msg-bot');
+            }, 800);
+        }
+
+        function addMsg(text, className) {
+            const el = document.createElement('div');
+            el.className = 'chat-msg ' + className;
+            el.innerText = text;
+            chatBody.appendChild(el);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
