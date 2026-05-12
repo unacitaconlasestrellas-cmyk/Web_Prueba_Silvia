@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada | Las Estrellas te Guían</title>
+    <link rel="icon" type="image/png" href="logo_silvia.png?v=2">
+    <link rel="stylesheet" href="cookies.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    
+    <script>
+        (function() {
+            const img = new Image();
+            img.src = 'logo_silvia.png';
+            img.crossOrigin = 'anonymous'; 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+                let found = false;
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const alpha = data[(y * canvas.width + x) * 4 + 3];
+                        if (alpha > 10) {
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+                if (!found) return;
+                const cropWidth = maxX - minX;
+                const cropHeight = maxY - minY;
+                const finalSize = 128;
+                const outputCanvas = document.createElement('canvas');
+                outputCanvas.width = finalSize;
+                outputCanvas.height = finalSize;
+                const octx = outputCanvas.getContext('2d');
+                const maxDim = Math.max(cropWidth, cropHeight);
+                const scale = finalSize / maxDim;
+                const xOffset = (finalSize - cropWidth * scale) / 2;
+                const yOffset = (finalSize - cropHeight * scale) / 2;
+                octx.drawImage(img, minX, minY, cropWidth, cropHeight, xOffset, yOffset, cropWidth * scale, cropHeight * scale);
+                const link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = outputCanvas.toDataURL();
+                const oldLinks = document.querySelectorAll('link[rel="icon"]');
+                oldLinks.forEach(el => el.parentNode.removeChild(el));
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        })();
+    </script>
+    <style>
+        :root {
+            --main-bg: #fdfdf7;
+            --text-dark: #1b1228;
+            --gold: #c9982a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            background-image: url('fondo_nubes.png');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo-image {
+            height: 110px;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.1));
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: var(--text-dark);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 3.5rem; }
+            h2 { font-size: 1.5rem; }
+            header { padding: 1.5rem; justify-content: center; }
+            .logo-image { height: 80px; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo_silvia.png" alt="Logo Silvia" class="logo-image">
+        </a>
+    </header>
+
+    <main>
+        <div class="error-container">
+            <h1>404</h1>
+            <h2>Lo sentimos, página no encontrada</h2>
+            <p>La dirección que has introducido no existe o ha sido movida. Por favor, comprueba que la URL es correcta o vuelve a la página principal.</p>
+            <a href="index.html" class="btn-home">Volver al inicio</a>
+        </div>
+    </main>
+
+    <footer>
+        © 2026 Las Estrellas te Guían. Todos los derechos reservados.
+    </footer>
+
+    <script src="cookies.js" defer></script>
+</body>
+
+</html>

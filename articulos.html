@@ -5,19 +5,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artículos de Interés | Las Estrellas te Guían</title>
-    <meta name="description"
-        content="Artículos de astrología sobre los signos del zodíaco. Descubre tu Sol, Luna y Ascendente.">
+    <meta name="description" content="Aprende sobre los signos del zodíaco, el Sol, la Luna y el Ascendente. Artículos profundos sobre astrología evolutiva.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Artículos de Astrología | Las Estrellas te Guían">
+    <meta property="og:description" content="Explora el significado de los astros y cómo influyen en tu camino personal.">
+    <meta property="og:image" content="logo_silvia.png">
+    <meta property="og:url" content="https://unacitaconlasestrellas.com/articulos.html">
+
+    <link rel="icon" type="image/png" href="logo_silvia.png?v=2">
+    <link rel="stylesheet" href="cookies.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
         rel="stylesheet">
+    
+    <script>
+        (function() {
+            const img = new Image();
+            img.src = 'logo_silvia.png';
+            img.crossOrigin = 'anonymous'; 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+                let found = false;
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const alpha = data[(y * canvas.width + x) * 4 + 3];
+                        if (alpha > 10) {
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+                if (!found) return;
+                const cropWidth = maxX - minX;
+                const cropHeight = maxY - minY;
+                const finalSize = 128;
+                const outputCanvas = document.createElement('canvas');
+                outputCanvas.width = finalSize;
+                outputCanvas.height = finalSize;
+                const octx = outputCanvas.getContext('2d');
+                const maxDim = Math.max(cropWidth, cropHeight);
+                const scale = finalSize / maxDim;
+                const xOffset = (finalSize - cropWidth * scale) / 2;
+                const yOffset = (finalSize - cropHeight * scale) / 2;
+                octx.drawImage(img, minX, minY, cropWidth, cropHeight, xOffset, yOffset, cropWidth * scale, cropHeight * scale);
+                const link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = outputCanvas.toDataURL();
+                const oldLinks = document.querySelectorAll('link[rel="icon"]');
+                oldLinks.forEach(el => el.parentNode.removeChild(el));
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        })();
+    </script>
     <style>
         :root {
             --nav-text: #ffffff;
             --main-text: #FDFBF7;
             --btn-bg: #0f0a21;
-            --gold: #E5C07B;
+            --gold: #aa9a3f;
             --text-muted: #fbf5ff;
         }
 
@@ -93,8 +153,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 3rem;
-            max-width: 1400px;
+            padding: 2rem 2rem;
+            max-width: 1700px;
             margin: 0 auto;
             position: absolute;
             left: 50%;
@@ -123,7 +183,7 @@
         nav ul {
             display: flex;
             list-style: none;
-            gap: 4.5rem;
+            gap: 2rem;
         }
 
         nav a {
@@ -134,6 +194,7 @@
             transition: opacity 0.3s;
             position: relative;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
         }
 
         nav a.active::after {
@@ -162,6 +223,7 @@
             fill: var(--nav-text);
             transition: opacity 0.3s;
             cursor: pointer;
+            pointer-events: none;
         }
 
         .social-icons svg:hover {
@@ -295,7 +357,7 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 2rem;
-            padding-top: 280px;
+            padding-top: 180px;
             padding-bottom: 6rem;
             pointer-events: none;
         }
@@ -308,16 +370,11 @@
         .page-header {
             text-align: center;
             margin-bottom: 4rem;
-            background: rgba(18, 10, 35, 0.5);
-            backdrop-filter: blur(14px);
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             padding: 2.5rem 3rem;
         }
 
         .page-header h1 {
-            font-size: 3.8rem;
+            font-size: clamp(2.2rem, 7vw, 3.8rem);
             font-weight: 600;
             letter-spacing: 1px;
             margin-bottom: 0.8rem;
@@ -338,11 +395,7 @@
 
         /* Card */
         .blog-card {
-            background: rgba(18, 10, 35, 0.55);
-            backdrop-filter: blur(12px);
             border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
             text-decoration: none;
@@ -476,18 +529,71 @@
         }
 
         @media(max-width:900px) {
+            header {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1.5rem;
+                position: relative;
+                transform: none;
+                left: 0;
+            }
+
+            .logo-image {
+                height: 150px;
+            }
+
+            nav a {
+                font-size: 1.3rem;
+            }
+
+            main {
+                padding-top: 2rem;
+            }
+
             .blog-grid {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .page-header h1 {
-                font-size: 2.6rem;
+            .page-header {
+                padding: 2rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
             }
         }
 
         @media(max-width:600px) {
+            header {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .logo-image {
+                height: 110px;
+            }
+
+            nav a {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+
             .blog-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .blog-card {
+                max-width: 400px;
+                margin: 0 auto;
             }
         }
 
@@ -700,8 +806,8 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="servicios.html">Servicios</a></li>
+                <li style="display: none;"><a href="formaciones.html">Formaciones</a></li>
                 <li><a href="articulos.html" class="active">Artículos de interés</a></li>
-                <li><a href="legal.html">Información legal</a></li>
             </ul>
         </nav>
         <div class="social-icons">
@@ -888,7 +994,7 @@
                 </div>
             </div>
             <div class="footer-legal">
-                <a href="legal.html">Aviso legal (consulta las bases aquí)</a>
+                <a href="legal.html" target="_blank" rel="noopener noreferrer">Aviso legal (consulta las bases aquí)</a>
                 <div class="footer-copyright">© 2026. All rights reserved.</div>
             </div>
         </div>
@@ -1095,6 +1201,7 @@
         initParticles();
         render();
     </script>
+    <script src="cookies.js" defer></script>
 </body>
 
 </html>

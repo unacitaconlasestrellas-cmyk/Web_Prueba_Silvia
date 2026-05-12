@@ -4,12 +4,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astrología | Viaje a las Estrellas</title>
+    <title>Astrología | Las Estrellas te Guían</title>
+    <meta name="description" content="Descubre tu propósito a través de los astros. Consultas de carta natal, tránsitos y formación en astrología con Silvia.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Las Estrellas te Guían | Astrología Evolutiva">
+    <meta property="og:description" content="Acompañamiento terapéutico y evolutivo a través del lenguaje de las estrellas.">
+    <meta property="og:url" content="https://unacitaconlasestrellas.com/">
+
+    <link rel="icon" type="image/png" href="logo_silvia.png?v=2">
+    <link rel="stylesheet" href="cookies.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
         rel="stylesheet">
+    
+    <script>
+        (function() {
+            const img = new Image();
+            img.src = 'logo_silvia.png';
+            img.crossOrigin = 'anonymous'; 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+                let found = false;
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const alpha = data[(y * canvas.width + x) * 4 + 3];
+                        if (alpha > 10) {
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+                if (!found) return;
+                const cropWidth = maxX - minX;
+                const cropHeight = maxY - minY;
+                const finalSize = 128;
+                const outputCanvas = document.createElement('canvas');
+                outputCanvas.width = finalSize;
+                outputCanvas.height = finalSize;
+                const octx = outputCanvas.getContext('2d');
+                const maxDim = Math.max(cropWidth, cropHeight);
+                const scale = finalSize / maxDim;
+                const xOffset = (finalSize - cropWidth * scale) / 2;
+                const yOffset = (finalSize - cropHeight * scale) / 2;
+                octx.drawImage(img, minX, minY, cropWidth, cropHeight, xOffset, yOffset, cropWidth * scale, cropHeight * scale);
+                const link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = outputCanvas.toDataURL();
+                const oldLinks = document.querySelectorAll('link[rel="icon"]');
+                oldLinks.forEach(el => el.parentNode.removeChild(el));
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        })();
+    </script>
     <style>
         :root {
             --nav-text: #ffffff;
@@ -45,18 +106,32 @@
         }
 
         body {
-            /* Fondo de cielo cósmico puro para que reluzca todo el brillo original */
-            background-color: #3b1c71;
-            background-image: url('fondo_nubes.png');
-            background-size: 130vw 130vh;
-            /* Permite que el fondo tenga margen para girar/moverse */
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            animation: driftClouds 80s ease-in-out infinite;
+            /* Eliminamos el fondo directo del body para poder filtrarlo en una capa aparte */
             font-family: 'Montserrat', sans-serif;
             color: var(--main-text);
             min-height: 100vh;
             overflow-x: hidden;
+            background-color: #120a23;
+            /* Fondo oscuro base */
+        }
+
+        #home-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            /* El fondo original saturado */
+            background-color: #834ea1;
+            background-image: url('fondo_nubes.png');
+            background-size: 130vw 130vh;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            animation: driftClouds 80s ease-in-out infinite;
+            /* Bajamos la saturación un poco para que no sea tan intenso */
+            filter: saturate(0.45);
+            pointer-events: none;
         }
 
         /* --- Canvas Background para Interacciones Estelares --- */
@@ -87,8 +162,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 3rem;
-            max-width: 1400px;
+            padding: 2rem 2rem;
+            max-width: 1700px;
             margin: 0 auto;
             position: absolute;
             left: 50%;
@@ -117,7 +192,7 @@
         nav ul {
             display: flex;
             list-style: none;
-            gap: 4.5rem;
+            gap: 2rem;
         }
 
         nav a {
@@ -127,7 +202,8 @@
             font-weight: 600;
             transition: opacity 0.3s ease;
             position: relative;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 10px rgba(15, 15, 15, 0.384);
+            white-space: nowrap;
         }
 
         nav a.active::after {
@@ -156,6 +232,7 @@
             fill: var(--nav-text);
             transition: opacity 0.3s ease;
             cursor: pointer;
+            pointer-events: none;
         }
 
         .social-icons svg:hover {
@@ -216,7 +293,7 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 2rem;
-            padding-top: 300px;
+            padding-top: 180px;
             pointer-events: none;
         }
 
@@ -236,8 +313,8 @@
         }
 
         .hero h1 {
-            font-size: 4.8rem;
-            /* Título mucho más imponente */
+            font-size: clamp(2.2rem, 8vw, 4.8rem);
+            /* Título dinámico para adaptarse a pantallas */
             font-weight: 600;
             /* Letras más gruesas y sólidas */
             letter-spacing: 1px;
@@ -246,6 +323,8 @@
             max-width: 950px;
             /* Más espacio para las letras anchas */
             margin-bottom: 2rem;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            /* Sombreado para que resalte mejor */
         }
 
         .hero-subtitle {
@@ -305,7 +384,7 @@
         }
 
         .sobre-mi-txt h2 {
-            font-size: 3.5rem;
+            font-size: clamp(2rem, 6vw, 3.5rem);
             line-height: 1.1;
             margin-bottom: 2rem;
         }
@@ -356,6 +435,15 @@
         .servicios {
             text-align: center;
             margin-bottom: 8rem;
+
+            /* Glassmorphism: Caja global de cristal */
+            padding: 4rem 3rem;
+            background: rgba(18, 10, 35, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
         .servicios h2 {
@@ -371,10 +459,15 @@
 
         .servicio-card {
             text-align: center;
-            /* Centrado de todo el contenido de la tarjeta */
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 0 1rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .servicio-card:hover {
+            transform: translateY(-8px);
         }
 
         .servicio-card h3 {
@@ -416,7 +509,7 @@
             bottom: 30px;
             right: 30px;
             z-index: 1000;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: flex-end;
         }
@@ -561,16 +654,43 @@
             header {
                 padding: 1.5rem 2rem;
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem;
                 position: relative;
+                transform: none;
+                left: 0;
+            }
+
+            .logo-image {
+                height: 150px;
+            }
+
+            nav a {
+                font-size: 1.3rem;
             }
 
             .hero {
-                margin-top: 3rem;
+                margin-top: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 2.5rem;
             }
 
             .sobre-mi {
                 flex-direction: column;
+                text-align: center;
+                gap: 4rem;
+            }
+
+            .sobre-mi-img-container {
+                justify-content: center;
+                order: -1;
+            }
+
+            .sobre-mi-img {
+                max-width: 480px;
+                transform: scale(1.1);
             }
 
             .servicios-grid {
@@ -580,6 +700,49 @@
             nav ul {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .logo-image {
+                height: 110px;
+            }
+
+            nav a {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.4rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .sobre-mi-txt {
+                padding: 1.5rem;
+            }
+
+            .sobre-mi-img {
+                max-width: 100%;
+                transform: scale(1.05);
+            }
+
+            .servicios {
+                padding: 3rem 1.5rem;
+            }
+
+            .servicios h2 {
+                font-size: 2.2rem;
+                margin-bottom: 3rem;
             }
         }
 
@@ -603,7 +766,6 @@
             align-items: center;
         }
 
-        .footer-empty {}
 
         .footer-contact {
             text-align: center;
@@ -703,10 +865,63 @@
                 display: none;
             }
         }
+
+        /* Zodiac Marquee */
+        .zodiac-marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 1rem 0;
+            width: 100%;
+            position: relative;
+            z-index: 100;
+            margin-bottom: 2rem;
+        }
+
+        .zodiac-marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee 50s linear infinite;
+        }
+
+        .zodiac-marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .zodiac-slide {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            margin: 0 3vw;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+        }
+
+        .zodiac-slide:hover {
+            transform: scale(1.3) translateY(-5px);
+            filter: drop-shadow(0 0 15px rgba(229, 192, 123, 0.8));
+        }
+
+        .zodiac-slide svg {
+            width: 50px;
+            height: 50px;
+        }
     </style>
 </head>
 
 <body>
+    <div id="home-bg"></div>
 
     <svg class="icon-defs">
         <!-- Chica en la luna LOGO (aprox visual) -->
@@ -754,44 +969,7 @@
 
     <canvas id="interactive-layer"></canvas>
 
-    <div id="zodiac-layer">
-        <svg class="zodiac-icon" style="top: 15%; left: 10%;">
-            <use href="#icon-aries" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 25%; left: 30%;">
-            <use href="#icon-taurus" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 10%; right: 20%;">
-            <use href="#icon-gemini" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 40%; left: 5%;">
-            <use href="#icon-cancer" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 45%; right: 10%;">
-            <use href="#icon-leo" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 60%; left: 15%;">
-            <use href="#icon-virgo" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 70%; left: 40%;">
-            <use href="#icon-libra" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 65%; right: 25%;">
-            <use href="#icon-scorpio" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 85%; right: 10%;">
-            <use href="#icon-sagittarius" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 80%; left: 70%;">
-            <use href="#icon-capricorn" />
-        </svg>
-        <svg class="zodiac-icon" style="top: 50%; left: 80%;">
-            <use href="#icon-aquarius" />
-        </svg>
-        <svg class="zodiac-icon" style="bottom: 10%; left: 20%;">
-            <use href="#icon-pisces" />
-        </svg>
-    </div>
+    <!-- Zodiaz layer was replaced by marquee -->
 
     <!-- HEADER -->
     <header>
@@ -802,8 +980,8 @@
             <ul>
                 <li><a href="index.html" class="active">Inicio</a></li>
                 <li><a href="servicios.html">Servicios</a></li>
+                <li style="display: none;"><a href="formaciones.html">Formaciones</a></li>
                 <li><a href="articulos.html">Artículos de interés</a></li>
-                <li><a href="legal.html">Información legal</a></li>
             </ul>
         </nav>
         <div class="social-icons">
@@ -820,11 +998,92 @@
 
     <main>
         <!-- Hero Section -->
+        <!-- Hero Section -->
         <section class="hero">
+            <!-- Zodiac Marquee -->
+            <div class="zodiac-marquee-container">
+                <div class="zodiac-marquee-track">
+                    <!-- Set 1 -->
+                    <div class="zodiac-slide" title="Aries"><svg>
+                            <use href="#icon-aries" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Tauro"><svg>
+                            <use href="#icon-taurus" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Géminis"><svg>
+                            <use href="#icon-gemini" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Cáncer"><svg>
+                            <use href="#icon-cancer" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Leo"><svg>
+                            <use href="#icon-leo" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Virgo"><svg>
+                            <use href="#icon-virgo" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Libra"><svg>
+                            <use href="#icon-libra" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Escorpio"><svg>
+                            <use href="#icon-scorpio" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Sagitario"><svg>
+                            <use href="#icon-sagittarius" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Capricornio"><svg>
+                            <use href="#icon-capricorn" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Acuario"><svg>
+                            <use href="#icon-aquarius" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Piscis"><svg>
+                            <use href="#icon-pisces" />
+                        </svg></div>
+                    <!-- Set 2 -->
+                    <div class="zodiac-slide" title="Aries"><svg>
+                            <use href="#icon-aries" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Tauro"><svg>
+                            <use href="#icon-taurus" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Géminis"><svg>
+                            <use href="#icon-gemini" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Cáncer"><svg>
+                            <use href="#icon-cancer" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Leo"><svg>
+                            <use href="#icon-leo" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Virgo"><svg>
+                            <use href="#icon-virgo" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Libra"><svg>
+                            <use href="#icon-libra" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Escorpio"><svg>
+                            <use href="#icon-scorpio" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Sagitario"><svg>
+                            <use href="#icon-sagittarius" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Capricornio"><svg>
+                            <use href="#icon-capricorn" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Acuario"><svg>
+                            <use href="#icon-aquarius" />
+                        </svg></div>
+                    <div class="zodiac-slide" title="Piscis"><svg>
+                            <use href="#icon-pisces" />
+                        </svg></div>
+                </div>
+            </div>
+
             <h1>Comienza tu viaje hacia las estrellas: Consultas de Astrología y Carta Natal</h1>
             <p class="hero-subtitle">Tu carta natal es la guía más honesta que existe.<br>Te ayudo a interpretar tu mapa
                 del cielo para que tomes decisiones en sintonía con tu propósito.</p>
-            <a href="#" class="btn-primary">Pide Cita</a>
+            <a href="servicios.html" class="btn-primary">Pide Cita</a>
         </section>
 
         <!-- Sobre Mí Section -->
@@ -842,11 +1101,11 @@
                     comprendidas.</p>
                 <p>Si sientes que quieres conocerte mejor, entenderte más, romper patrones o enfrentar obstáculos, puedo
                     acompañarte en este camino.</p>
-                <a href="#" class="btn-primary btn-secondary">Pide cita</a>
+                <a href="servicios.html" class="btn-primary btn-secondary">Pide cita</a>
             </div>
             <div class="sobre-mi-img-container">
                 <!-- Imagen real de Silvia -->
-                <img src="chica.png" alt="Silvia" class="sobre-mi-img">
+                <img src="nueva_chica.jpg" alt="Silvia" class="sobre-mi-img">
             </div>
         </section>
 
@@ -855,28 +1114,28 @@
             <h2>Mis servicios</h2>
             <div class="servicios-grid">
                 <!-- Carta Natal -->
-                <div class="servicio-card">
+                <a href="servicios.html" class="servicio-card">
                     <img src="servicio_carta_natal.png" alt="Carta Natal" class="servicio-img">
                     <h3>Carta Natal</h3>
                     <p>Esta lectura es un espacio seguro para conocerte mejor y entender tus patrones desde la
                         astrología, sin juicios y de forma práctica para tu día a día.</p>
-                </div>
+                </a>
                 <!-- Tránsitos -->
-                <div class="servicio-card">
+                <a href="servicios.html" class="servicio-card">
                     <img src="servicio_transitos.png" alt="Tránsitos" class="servicio-img">
                     <h3>Tránsitos</h3>
                     <p>Esta lectura te ayuda a entender cómo los movimientos de los planetas impactan tu día a día y a
                         tomar decisiones más conscientes, desde la claridad y la calma, sin presiones ni expectativas
                         externas.</p>
-                </div>
+                </a>
                 <!-- Consultas -->
-                <div class="servicio-card">
+                <a href="servicios.html" class="servicio-card">
                     <img src="servicio_consultas.png" alt="Consultas" class="servicio-img">
                     <h3>Consultas</h3>
                     <p>Esta consulta es un espacio seguro y cercano para recibir orientación clara y útil ya sea de algo
                         que te preocupa, algo en lo que necesites profundizar o simplemente para abrirte a recibir qué
                         mensaje principal tiene tu alma para ti.</p>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -886,7 +1145,7 @@
     <div id="chatbot-widget">
         <div id="chatbot-window">
             <div class="chat-header">
-                <span>✨ Efemérides</span>
+                <span>Efemérides</span>
                 <span class="chat-close" onclick="toggleChat()">×</span>
             </div>
             <div class="chat-body" id="chat-body">
@@ -933,7 +1192,7 @@
                 </div>
             </div>
             <div class="footer-legal">
-                <a href="legal.html">Aviso legal (consulta las bases aquí)</a>
+                <a href="legal.html" target="_blank" rel="noopener noreferrer">Aviso legal (consulta las bases aquí)</a>
                 <div class="footer-copyright">© 2026. All rights reserved.</div>
             </div>
         </div>
@@ -944,171 +1203,158 @@
         let cw = canvas.width = window.innerWidth;
         let ch = canvas.height = window.innerHeight;
 
-        let mouseX = -1000;
-        let mouseY = -1000;
-        let trails = [];
-        let nodes = [];
+        let mouseX = cw / 2;
+        let mouseY = ch / 2;
+        let particles = [];
+        const config = {
+            particleCount: 700,
+            mouseRepulseRadius: 350,   // Área de expansión extendida
+            mouseRepulseForce: 0.55,   // Multiplicado casi x4 respecto al anterior para impacto contundente
+            particleRepelRadius: 45,   // Repulsión mutua tenue
+            particleRepelForce: 0.02
+        };
 
         window.addEventListener('resize', () => {
             cw = canvas.width = window.innerWidth;
             ch = canvas.height = window.innerHeight;
-            initNodes();
+            initParticles();
         });
 
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            trails.push({ x: mouseX, y: mouseY, alpha: 0.8 });
         });
 
-        function initNodes() {
-            nodes = [];
-            for (let i = 0; i < 60; i++) {
-                nodes.push({
-                    x: Math.random() * cw,
-                    y: Math.random() * ch,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4
-                });
+        class Particle {
+            constructor() {
+                this.init();
             }
-        }
 
-        // Drag and Drop Zodiacs
-        const dragEls = document.querySelectorAll('.zodiac-icon');
-        let activeEl = null, initX, initY;
+            init() {
+                this.baseX = Math.random() * cw;
+                this.baseY = Math.random() * ch;
+                this.x = this.baseX;
+                this.y = this.baseY;
 
-        dragEls.forEach(el => {
-            el.addEventListener('mousedown', dragStart);
-            el.addEventListener('touchstart', dragStart, { passive: false });
-        });
+                this.isStar = Math.random() > 0.5;
+                this.size = this.isStar ? Math.random() * 2 + 1.5 : Math.random() * 1.5 + 0.5;
+                this.color = this.isStar ? `rgba(229, 192, 123, ${Math.random() * 0.7 + 0.3})` : `rgba(255, 255, 255, ${Math.random() * 0.7 + 0.3})`;
 
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('touchmove', drag, { passive: false });
-        document.addEventListener('mouseup', dragEnd);
-        document.addEventListener('touchend', dragEnd);
+                this.vx = 0;
+                this.vy = 0;
 
-        function dragStart(e) {
-            if (e.target.closest('.zodiac-icon')) {
-                activeEl = e.target.closest('.zodiac-icon');
-                activeEl.style.animation = 'none'; // Pausar flotación auto durante el drag
-                activeEl.style.zIndex = '100'; // Traer al frente al agarrar
-                if (e.type === "touchstart" || e.type === "pointerdown") {
-                    initX = e.touches ? e.touches[0].clientX : e.clientX;
-                    initY = e.touches ? e.touches[0].clientY : e.clientY;
-                } else {
-                    initX = e.clientX; initY = e.clientY;
+                // Mecerse despacio suavemente mechanics
+                this.phaseX = Math.random() * Math.PI * 2;
+                this.phaseY = Math.random() * Math.PI * 2;
+                this.swaySpeedX = (Math.random() * 0.003) + 0.001;
+                this.swaySpeedY = (Math.random() * 0.003) + 0.001;
+                this.swayAmplitude = Math.random() * 25 + 15;
+            }
+
+            update(particles) {
+                // Cálculo para mecerse despacio suavemente por el fondo
+                this.phaseX += this.swaySpeedX;
+                this.phaseY += this.swaySpeedY;
+                let targetX = this.baseX + Math.sin(this.phaseX) * this.swayAmplitude;
+                let targetY = this.baseY + Math.cos(this.phaseY) * this.swayAmplitude;
+
+                // Elástica hacia la posición relajada de vaivén
+                let spring = 0.015;
+                this.vx += (targetX - this.x) * spring;
+                this.vy += (targetY - this.y) * spring;
+
+                // Interactúan con el movimiento del cursor, creando un remolino galáctico
+                let dx = this.x - mouseX;
+                let dy = this.y - mouseY;
+                let distToMouse = Math.sqrt(dx * dx + dy * dy);
+
+                if (distToMouse < config.mouseRepulseRadius && distToMouse > 0) {
+                    let force = (config.mouseRepulseRadius - distToMouse) / config.mouseRepulseRadius;
+
+                    // 1. Repulsión suave hacia afuera para no estar pegadas al centro
+                    this.vx += (dx / distToMouse) * force * config.mouseRepulseForce * 0.4;
+                    this.vy += (dy / distToMouse) * force * config.mouseRepulseForce * 0.4;
+
+                    // 2. Rotación / Remolino (fuerza tangencial perpendicular al radio)
+                    let angle = Math.atan2(dy, dx);
+                    // Sumamos 90 grados (Pi/2) al ángulo para hacerlas orbitar
+                    let vortexForce = force * config.mouseRepulseForce * 2.5;
+                    this.vx += Math.cos(angle + Math.PI / 2) * vortexForce;
+                    this.vy += Math.sin(angle + Math.PI / 2) * vortexForce;
                 }
-            }
-        }
 
-        function drag(e) {
-            if (activeEl) {
-                e.preventDefault();
-                let x = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-                let y = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
-                let dx = x - initX; let dy = y - initY;
-                initX = x; initY = y;
+                // Repulsión mutua sutil entre partículas
+                for (let i = 0; i < particles.length; i++) {
+                    let p2 = particles[i];
+                    if (this === p2) continue;
 
-                let left = parseFloat(window.getComputedStyle(activeEl).left) || 0;
-                let top = parseFloat(window.getComputedStyle(activeEl).top) || 0;
+                    let pdx = this.x - p2.x;
+                    let pdy = this.y - p2.y;
+                    let pdist = Math.sqrt(pdx * pdx + pdy * pdy);
 
-                activeEl.style.left = (left + dx) + 'px';
-                activeEl.style.top = (top + dy) + 'px';
-                activeEl.style.right = 'auto';
-                activeEl.style.bottom = 'auto';
-
-                // Add powerful star trail when dragging
-                trails.push({ x: left + dx + 22, y: top + dy + 22, alpha: 1.5 });
-            } else {
-                // Subtle parallax towards mouse for non-active elements
-                dragEls.forEach(el => {
-                    let rect = el.getBoundingClientRect();
-                    let cx = rect.left + rect.width / 2;
-                    let cy = rect.top + rect.height / 2;
-                    let dist = Math.sqrt(Math.pow(mouseX - cx, 2) + Math.pow(mouseY - cy, 2));
-                    if (dist < 250) {
-                        let left = parseFloat(window.getComputedStyle(el).left) || 0;
-                        let top = parseFloat(window.getComputedStyle(el).top) || 0;
-                        el.style.left = left + (mouseX - cx) * 0.005 + 'px';
-                        el.style.top = top + (mouseY - cy) * 0.005 + 'px';
-                        if (Math.random() > 0.7) trails.push({ x: cx, y: cy, alpha: 0.6 });
+                    if (pdist > 0 && pdist < config.particleRepelRadius) {
+                        let repulseFactor = (config.particleRepelRadius - pdist) / config.particleRepelRadius;
+                        this.vx += (pdx / pdist) * repulseFactor * config.particleRepelForce;
+                        this.vy += (pdy / pdist) * repulseFactor * config.particleRepelForce;
                     }
-                });
+                }
+
+                this.vx *= 0.88; // Fricción constate
+                this.vy *= 0.88;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                if (this.isStar) {
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = "rgba(229, 192, 123, 0.9)";
+                } else {
+                    ctx.shadowBlur = 3;
+                    ctx.shadowColor = "rgba(255, 255, 255, 0.5)";
+                }
+                ctx.fill();
             }
         }
 
-        function dragEnd() {
-            if (activeEl) {
-                activeEl.style.animation = 'globalFloat 25s ease-in-out infinite alternate'; // Restaurar flotación
-                activeEl.style.zIndex = 'unset';
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < config.particleCount; i++) {
+                particles.push(new Particle());
             }
-            activeEl = null;
         }
 
         function render() {
             ctx.clearRect(0, 0, cw, ch);
 
-            // Nodes (constellations)
-            for (let i = 0; i < nodes.length; i++) {
-                let distMouse = Math.sqrt(Math.pow(mouseX - nodes[i].x, 2) + Math.pow(mouseY - nodes[i].y, 2));
-                if (distMouse < 200) {
-                    nodes[i].x += (mouseX - nodes[i].x) * 0.015;
-                    nodes[i].y += (mouseY - nodes[i].y) * 0.015;
-
-                    // Constellation line to mouse
-                    ctx.beginPath();
-                    ctx.moveTo(nodes[i].x, nodes[i].y);
-                    ctx.lineTo(nodes[i].x - (mouseX - nodes[i].x) * 0.1, nodes[i].y - (mouseY - nodes[i].y) * 0.1);
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distMouse / 200})`;
-                    ctx.lineWidth = 1.0;
-                    ctx.stroke();
-                } else {
-                    nodes[i].x += nodes[i].vx;
-                    nodes[i].y += nodes[i].vy;
-                }
-
-                if (nodes[i].x < 0 || nodes[i].x > cw) nodes[i].vx *= -1;
-                if (nodes[i].y < 0 || nodes[i].y > ch) nodes[i].vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(nodes[i].x, nodes[i].y, 1.2, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(229, 192, 123, 0.6)"; /* Golden dust */
-                ctx.fill();
-
-                let connections = 0;
-                for (let j = i + 1; j < nodes.length; j++) {
-                    let dist = Math.sqrt(Math.pow(nodes[i].x - nodes[j].x, 2) + Math.pow(nodes[i].y - nodes[j].y, 2));
-                    // Constelaciones de verdad: líneas rectas y un máximo de 2 conexiones por estrella
-                    if (dist < 130 && connections < 2) {
-                        ctx.beginPath();
-                        ctx.moveTo(nodes[i].x, nodes[i].y);
-                        ctx.lineTo(nodes[j].x, nodes[j].y);
-                        ctx.strokeStyle = `rgba(229, 192, 123, ${(1 - dist / 130) * 0.6})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                        connections++;
-                    }
-                }
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(particles);
             }
 
-            // Trails
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "white";
-            for (let i = 0; i < trails.length; i++) {
-                ctx.beginPath();
-                ctx.arc(trails[i].x, trails[i].y, 1.5, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${trails[i].alpha})`;
-                ctx.fill();
-                trails[i].alpha -= 0.03;
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].draw();
             }
-            ctx.shadowBlur = 0;
-            trails = trails.filter(t => t.alpha > 0);
 
             requestAnimationFrame(render);
         }
 
-        initNodes();
+        initParticles();
         render();
+
+        // Mover el marquee del zodiaco fuera de main para que ocupe toda la pantalla
+        const marqueeEl = document.querySelector('.zodiac-marquee-container');
+        const mainEl = document.querySelector('main');
+        if (marqueeEl && mainEl && mainEl.parentNode) {
+            mainEl.parentNode.insertBefore(marqueeEl, mainEl);
+            // El header es position:absolute, así que necesitamos empujar el marquee hacia abajo
+            marqueeEl.style.marginTop = '20px';
+            // Reducir padding-top de main para que el h1 quede justo debajo del marquee
+            mainEl.style.paddingTop = '20px';
+        }
 
         // Chatbot Logic
         const chatWindow = document.getElementById('chatbot-window');
@@ -1144,7 +1390,7 @@
             setTimeout(() => {
                 const responses = [
                     "Hoy la Luna transita por Tauro, es un día perfecto para conectar con tu cuerpo, comer algo rico y disfrutar de la calma material. 🌙",
-                    "El Sol está haciendo un trígono brillante con Júpiter. Siente la expansión y confía en tu intuición hoy, es tu momento de crecer. ✨",
+                    "El Sol está haciendo un trígono brillante con Júpiter. Siente la expansión y confía en tu intuición hoy, es tu momento de crecer.",
                     "Tenemos a Mercurio algo tenso cuadrando a Saturno. Ten mucha paciencia con las comunicaciones, respira antes de hablar. 🪐",
                     "La energía estelar nos pide soltar el control hoy. Plutón está muy activo en la bóveda, fluye con la transformación. 🌌",
                     "Venus está brillando en conjunción. Pon atención a las sincronías en tus relaciones hoy y valora profundamente la belleza que te rodea. 💖"
@@ -1162,6 +1408,7 @@
             chatBody.scrollTop = chatBody.scrollHeight;
         }
     </script>
+    <script src="cookies.js" defer></script>
 </body>
 
 </html>

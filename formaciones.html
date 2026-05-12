@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formación Astrológica | Las Estrellas te Guían</title>
+    <meta name="description" content="Fórmate como astrólogo/a con Silvia. Cursos prácticos y evolutivos para entender el lenguaje del cosmos.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Formación Astrológica | Las Estrellas te Guían">
+    <meta property="og:description" content="Cursos de astrología para todos los niveles. Aprende a leer el mapa del cielo.">
+    <meta property="og:image" content="logo_silvia.png">
+    <meta property="og:url" content="https://unacitaconlasestrellas.com/formaciones.html">
+
+    <link rel="icon" type="image/png" href="logo_silvia.png?v=2">
+    <link rel="stylesheet" href="cookies.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    
+    <script>
+        (function() {
+            const img = new Image();
+            img.src = 'logo_silvia.png';
+            img.crossOrigin = 'anonymous'; 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+                let found = false;
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const alpha = data[(y * canvas.width + x) * 4 + 3];
+                        if (alpha > 10) {
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+                if (!found) return;
+                const cropWidth = maxX - minX;
+                const cropHeight = maxY - minY;
+                const finalSize = 128;
+                const outputCanvas = document.createElement('canvas');
+                outputCanvas.width = finalSize;
+                outputCanvas.height = finalSize;
+                const octx = outputCanvas.getContext('2d');
+                const maxDim = Math.max(cropWidth, cropHeight);
+                const scale = finalSize / maxDim;
+                const xOffset = (finalSize - cropWidth * scale) / 2;
+                const yOffset = (finalSize - cropHeight * scale) / 2;
+                octx.drawImage(img, minX, minY, cropWidth, cropHeight, xOffset, yOffset, cropWidth * scale, cropHeight * scale);
+                const link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = outputCanvas.toDataURL();
+                const oldLinks = document.querySelectorAll('link[rel="icon"]');
+                oldLinks.forEach(el => el.parentNode.removeChild(el));
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        })();
+    </script>
+    <style>
+        :root {
+            --nav-text: #ffffff;
+            --main-text: #FDFBF7;
+            --btn-bg: #0f0a21;
+            --gold: #E5C07B;
+            --text-muted: #fbf5ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        @keyframes driftClouds {
+            0% {
+                background-position: left center;
+            }
+
+            50% {
+                background-position: right center;
+            }
+
+            100% {
+                background-position: left center;
+            }
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes floatUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(229, 192, 123, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(229, 192, 123, 0.5);
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--main-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #0e0520;
+            /* Fallback */
+        }
+
+        /* Fixed Background Sky */
+        #page-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg,
+                    #1a0b2e 0%,
+                    #3a1c71 25%,
+                    #7a288a 50%,
+                    #d76d77 75%,
+                    #ffafbd 100%);
+            background-size: 400% 400%;
+            animation: driftClouds 20s ease infinite;
+            filter: saturate(0.8) brightness(0.7);
+            /* Slightly muted for readability, consistent with user's earlier preference */
+        }
+
+        /* Canvas */
+        #interactive-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: all;
+            /* Enable mouse interaction for popping */
+            cursor: crosshair;
+        }
+
+        #tree-bg-container {
+            position: fixed;
+            bottom: -5vh;
+            left: 72%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 90vh;
+            z-index: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        #realistic-tree-bg {
+            max-height: 100%;
+            object-fit: contain;
+            mix-blend-mode: lighten;
+            opacity: 0;
+            transform-origin: bottom center;
+            transform: scale(0.6);
+            animation: growTree 3s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+        }
+
+        @keyframes growTree {
+            0% {
+                opacity: 0;
+                transform: scale(0.6) translateY(50px);
+                filter: brightness(0.5);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: brightness(1);
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        .title-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: var(--main-text);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem;
+            max-width: 1700px;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo-image {
+            height: 190px;
+            width: auto;
+            filter: drop-shadow(0 0 15px rgba(229, 192, 123, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-image {
+            transform: scale(1.05);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--nav-text);
+            font-size: 1.65rem;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--nav-text);
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .social-icons svg {
+            width: 34px;
+            height: 34px;
+            fill: var(--nav-text);
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            pointer-events: none;
+        }
+
+        .social-icons svg:hover {
+            opacity: 0.7;
+        }
+
+        .icon-defs {
+            display: none;
+        }
+
+        /* Main */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            padding-top: 230px;
+            padding-bottom: 6rem;
+            pointer-events: none;
+        }
+
+        main * {
+            pointer-events: auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 5rem;
+            animation: floatUp 0.9s ease both;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.2rem, 8vw, 4.2rem);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .page-header h1 span {
+            color: var(--gold);
+        }
+
+        .page-header p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 550px;
+            margin: 0 auto;
+            line-height: 1.7;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Próximamente Banner */
+        .coming-soon-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            padding: 0.7rem 2rem;
+            background: rgba(229, 192, 123, 0.12);
+            border: 1px solid rgba(229, 192, 123, 0.35);
+            border-radius: 50px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .coming-soon-banner span {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .coming-soon-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+
+        /* Formaciones Grid */
+        .formaciones-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            margin-bottom: 6rem;
+        }
+
+        /* Formación Card */
+        .formacion-card {
+            background: rgba(18, 10, 35, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            animation: floatUp 0.8s ease both;
+        }
+
+        .formacion-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .formacion-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .formacion-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .formacion-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        .card-top {
+            padding: 2.5rem 2.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .card-icon.grad-violet {
+            background: linear-gradient(135deg, #4a1a8c, #7b3fc0);
+        }
+
+        .card-icon.grad-gold {
+            background: linear-gradient(135deg, #7a4f00, #c9982a);
+        }
+
+        .card-icon.grad-blue {
+            background: linear-gradient(135deg, #0e2a5c, #2e5aac);
+        }
+
+        .card-icon.grad-rose {
+            background: linear-gradient(135deg, #5c1a3a, #9b3060);
+        }
+
+        .card-meta {
+            flex: 1;
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .card-tag.pronto {
+            color: rgba(229, 192, 123, 0.5);
+        }
+
+        .formacion-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            text-shadow: none;
+            color: var(--main-text);
+        }
+
+        .card-body {
+            padding: 1.5rem 2.5rem 2.5rem;
+        }
+
+        .card-body p {
+            font-size: 0.9rem;
+            line-height: 1.75;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-details {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: rgba(253, 251, 247, 0.6);
+        }
+
+        .card-detail-item svg {
+            width: 14px;
+            height: 14px;
+            fill: rgba(229, 192, 123, 0.6);
+            flex-shrink: 0;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.07);
+            margin-bottom: 1.8rem;
+        }
+
+        .card-footer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+        }
+
+        .card-price span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(253, 251, 247, 0.5);
+            font-weight: 400;
+            display: block;
+            margin-top: 0.1rem;
+        }
+
+        .btn-card {
+            background: rgba(229, 192, 123, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(229, 192, 123, 0.3);
+            padding: 0.7rem 1.6rem;
+            border-radius: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-card:hover {
+            background: rgba(229, 192, 123, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(229, 192, 123, 0.2);
+        }
+
+        .btn-card.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Badge próximamente */
+        .badge-pronto {
+            display: inline-block;
+            padding: 0.3rem 0.9rem;
+            background: rgba(229, 192, 123, 0.08);
+            border: 1px solid rgba(229, 192, 123, 0.2);
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: rgba(229, 192, 123, 0.55);
+            letter-spacing: 1px;
+        }
+
+        /* Newsletter / Aviso previo */
+        .notify-section {
+            background: rgba(18, 10, 35, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 30px;
+            border: 1px solid rgba(229, 192, 123, 0.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            padding: 3.5rem 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: floatUp 0.9s ease 0.4s both;
+        }
+
+        .notify-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .notify-section p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .notify-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .notify-form input {
+            padding: 0.9rem 1.5rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 40px;
+            color: var(--main-text);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            width: 280px;
+            transition: border-color 0.3s;
+        }
+
+        .notify-form input::placeholder {
+            color: rgba(253, 251, 247, 0.35);
+        }
+
+        .notify-form input:focus {
+            border-color: rgba(229, 192, 123, 0.4);
+        }
+
+        .btn-primary {
+            background-color: var(--btn-bg);
+            color: white;
+            border: none;
+            padding: 0.9rem 2.5rem;
+            border-radius: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Footer */
+        .site-footer {
+            position: relative;
+            background: linear-gradient(135deg, rgba(62, 48, 117, 0.95), rgba(106, 82, 156, 0.8), rgba(154, 131, 184, 0.6));
+            backdrop-filter: blur(15px);
+            padding: 4rem 2rem 2rem;
+            color: #fff;
+            margin-top: 10rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            z-index: 100;
+            pointer-events: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+        }
+
+        .footer-contact {
+            text-align: center;
+        }
+
+        .footer-contact h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .footer-contact p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .footer-contact a {
+            color: #fff;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .footer-contact a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .footer-socials svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+            transition: transform 0.3s;
+        }
+
+        .footer-socials svg:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-legal {
+            text-align: right;
+        }
+
+        .footer-legal a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-legal a:hover {
+            opacity: 1;
+        }
+
+        .footer-copyright {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+        }
+
+        .footer-moon {
+            position: absolute;
+            left: 58%;
+            top: 55%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 0 15px rgba(255, 251, 211, 0.6));
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            header {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1.5rem;
+                position: relative;
+                transform: none;
+                left: 0;
+            }
+
+            .logo-image {
+                height: 150px;
+            }
+
+            nav a {
+                font-size: 1.3rem;
+            }
+
+            main {
+                padding-top: 2rem;
+            }
+
+            #tree-bg-container {
+                left: 50%;
+                bottom: -2vh;
+                height: 50vh;
+                opacity: 0.5;
+            }
+
+            .formaciones-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .page-header {
+                margin-bottom: 3rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .logo-image {
+                height: 110px;
+            }
+
+            nav a {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .card-top {
+                padding: 1.5rem 1.5rem 0;
+                gap: 1rem;
+            }
+
+            .card-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .notify-section {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .notify-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .notify-form input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .footer-legal {
+                text-align: center;
+            }
+
+            .footer-moon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <svg class="icon-defs">
+        <symbol id="icon-ig" viewBox="0 0 24 24">
+            <path
+                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+        </symbol>
+        <symbol id="icon-tk" viewBox="0 0 24 24">
+            <path
+                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+        </symbol>
+    </svg>
+
+    <div id="tree-bg-container">
+        <img src="arbol_formaciones.png" alt="Árbol mágico realista" id="realistic-tree-bg">
+    </div>
+    <div id="page-bg"></div>
+    <canvas id="interactive-layer"></canvas>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="logo_silvia.png" alt="Las Estrellas te Guían" class="logo-image"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li style="display: none;"><a href="formaciones.html" class="active">Formaciones</a></li>
+                <li><a href="articulos.html">Artículos de interés</a></li>
+            </ul>
+        </nav>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram"><svg>
+                    <use href="#icon-ig" />
+                </svg></a>
+            <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                aria-label="TikTok"><svg>
+                    <use href="#icon-tk" />
+                </svg></a>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Encabezado -->
+        <div class="page-header">
+            <div class="coming-soon-banner">
+                <div class="coming-soon-dot"></div>
+                <span>Próximamente disponible</span>
+                <div class="coming-soon-dot"></div>
+            </div>
+            <h1>Formaciones en <span>Astrología</span></h1>
+            <p>Aprende a leer el cielo y a comprender tu carta natal. Talleres y cursos para conectar con tu mundo
+                interior a través de los astros.</p>
+        </div>
+
+        <!-- Tarjetas de formaciones -->
+        <div class="formaciones-grid">
+
+            <!-- Formación 1 -->
+            <div class="formacion-card">
+                <div class="card-top">
+                    <div class="card-icon grad-violet">🌙</div>
+                    <div class="card-meta">
+                        <span class="card-tag">Curso Online · En vivo</span>
+                        <h3>Introducción a la Astrología</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>Un punto de partida para quienes quieren entender qué es la astrología de verdad: los planetas,
+                        los signos, las casas y cómo se relacionan con nuestra vida cotidiana. Sin tecnicismos, con
+                        mucho corazón.</p>
+                    <div class="card-details">
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                            </svg>
+                            4 sesiones · 2h cada una
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                            </svg>
+                            Grupos reducidos
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+                            </svg>
+                            Nivel básico
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-footer-row">
+                        <div class="card-price">
+                            Próximamente
+                            <span>Avísame cuando esté disponible</span>
+                        </div>
+                        <a href="mailto:unacitaconlasestrellas@gmail.com?subject=Me interesa: Introducción a la Astrología"
+                            class="btn-card">Me interesa</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formación 2 -->
+            <div class="formacion-card">
+                <div class="card-top">
+                    <div class="card-icon grad-gold">☀️</div>
+                    <div class="card-meta">
+                        <span class="card-tag">Taller Intensivo · Fin de semana</span>
+                        <h3>Leyendo Tu Carta Natal</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>Taller práctico donde aprenderás a interpretar tu propia carta natal paso a paso. Descubrirás los
+                        patrones que te definen, tus talentos naturales y los desafíos que estás aquí para transformar.
+                    </p>
+                    <div class="card-details">
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                            </svg>
+                            2 días · 6h en total
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                            </svg>
+                            Máx. 10 personas
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+                            </svg>
+                            Nivel medio
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-footer-row">
+                        <div class="card-price">
+                            Próximamente
+                            <span>Avísame cuando esté disponible</span>
+                        </div>
+                        <a href="mailto:unacitaconlasestrellas@gmail.com?subject=Me interesa: Taller Carta Natal"
+                            class="btn-card">Me interesa</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formación 3 -->
+            <div class="formacion-card">
+                <div class="card-top">
+                    <div class="card-icon grad-blue">🪐</div>
+                    <div class="card-meta">
+                        <span class="card-tag">Curso Online · Grabado</span>
+                        <h3>Tránsitos y Ciclos Vitales</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>Entiende cómo los movimientos planetarios afectan tu vida en cada etapa. Aprende a anticipar los
+                        grandes ciclos de crecimiento, cierre y transformación que todos atravesamos.</p>
+                    <div class="card-details">
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                            </svg>
+                            6 módulos · Acceso ilimitado
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                            </svg>
+                            A tu ritmo
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+                            </svg>
+                            Nivel medio
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-footer-row">
+                        <div class="card-price">
+                            Próximamente
+                            <span>Avísame cuando esté disponible</span>
+                        </div>
+                        <a href="mailto:unacitaconlasestrellas@gmail.com?subject=Me interesa: Tránsitos y Ciclos"
+                            class="btn-card">Me interesa</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formación 4 -->
+            <div class="formacion-card">
+                <div class="card-top">
+                    <div class="card-icon grad-rose"></div>
+                    <div class="card-meta">
+                        <span class="card-tag">Masterclass · Sesión única</span>
+                        <h3>Astrología para el Autoconocimiento</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>Una sesión especial donde exploraremos el mapa astrológico como herramienta de crecimiento
+                        personal. Ideal si quieres una primera aproximación profunda sin compromisos largos.</p>
+                    <div class="card-details">
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                            </svg>
+                            1 sesión · 3h
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                            </svg>
+                            Online · Directo
+                        </div>
+                        <div class="card-detail-item">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+                            </svg>
+                            Todos los niveles
+                        </div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-footer-row">
+                        <div class="card-price">
+                            Próximamente
+                            <span>Avísame cuando esté disponible</span>
+                        </div>
+                        <a href="mailto:unacitaconlasestrellas@gmail.com?subject=Me interesa: Masterclass Autoconocimiento"
+                            class="btn-card">Me interesa</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sección aviso previo -->
+        <div class="notify-section">
+            <h2>¿Quieres ser la primera en enterarte?</h2>
+            <p>Las formaciones están en camino. Déjame tu correo y te avisaré en cuanto estén disponibles, con acceso
+                prioritario y condiciones especiales de lanzamiento.</p>
+            <form class="notify-form" onsubmit="handleNotify(event)">
+                <input type="email" id="notify-email" placeholder="tu@correo.com" required>
+                <button type="submit" class="btn-primary">Avísame</button>
+            </form>
+            <p id="notify-confirm" style="display:none; margin-top:1.5rem; color:var(--gold); font-size:0.9rem;">
+                ¡Perfecto! Te escribiré en cuanto todo esté listo.</p>
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <svg class="footer-moon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50,10 A40,40 0 1,0 90,50 A30,30 0 1,1 50,10 Z" fill="#fff5e6" />
+        </svg>
+        <div class="footer-content">
+            <div class="footer-empty"></div>
+            <div class="footer-contact">
+                <h2>Contacto</h2>
+                <p>Correo electrónico: <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                        target="_blank" rel="noopener noreferrer"
+                        style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank"
+                        rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+                        </svg></a>
+                    <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                        aria-label="TikTok"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+                        </svg></a>
+                </div>
+            </div>
+            <div class="footer-legal">
+                <a href="legal.html" target="_blank" rel="noopener noreferrer">Aviso legal (consulta las bases aquí)</a>
+                <div class="footer-copyright">© 2026. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ================================================================
+        // FORMACIONES — Realistic Flying Books (Image Sprite System)
+        // ================================================================
+        const canvas = document.getElementById('interactive-layer');
+        const ctx = canvas.getContext('2d');
+        let W = canvas.width = window.innerWidth;
+        let H = canvas.height = window.innerHeight;
+        let mouse = { x: -9999, y: -9999 };
+
+        window.addEventListener('resize', () => {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            initScene();
+        });
+
+        canvas.addEventListener('mousemove', e => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+        });
+        canvas.addEventListener('mouseleave', () => {
+            mouse.x = -9999; mouse.y = -9999;
+        });
+
+        canvas.addEventListener('click', e => {
+            const mx = e.clientX, my = e.clientY;
+            for (let i = flyingBooks.length - 1; i >= 0; i--) {
+                if (flyingBooks[i].isHit(mx, my)) {
+                    flyingBooks[i].close();
+                    break;
+                }
+            }
+        });
+
+        function rnd(a, b) { return a + Math.random() * (b - a); }
+
+        // ── Assets ───────────────────────────────────────────────────────
+        const bookImg = new Image();
+        bookImg.src = 'libro_real.png'; // High-detail magical book
+        let imgReady = false;
+        bookImg.onload = () => { imgReady = true; };
+
+        // ── Page Scatter Effect ──────────────────────────────────────────
+        let pageParticles = [];
+
+        function scatterPages(x, y, scale, dir) {
+            const count = 12 + Math.floor(rnd(0, 6));
+            for (let i = 0; i < count; i++) {
+                const ang = rnd(-Math.PI * 0.8, Math.PI * 0.8) + (dir > 0 ? 0 : Math.PI);
+                const spd = rnd(2.5, 7) * scale;
+                pageParticles.push({
+                    x, y,
+                    vx: Math.cos(ang) * spd,
+                    vy: Math.sin(ang) * spd - rnd(1, 4),
+                    w: rnd(14, 28) * scale,
+                    h: rnd(10, 18) * scale,
+                    rot: rnd(0, Math.PI * 2),
+                    rspd: rnd(-0.2, 0.2),
+                    life: 1,
+                    shade: rnd(225, 255)
+                });
+            }
+        }
+
+        function updatePageParticles() {
+            pageParticles = pageParticles.filter(p => {
+                p.x += p.vx; p.y += p.vy;
+                p.vy += 0.18; // Gravity
+                p.vx *= 0.97; // Friction
+                p.rot += p.rspd;
+                p.life -= 0.025;
+                return p.life > 0;
+            });
+        }
+
+        function drawPageParticles() {
+            pageParticles.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.life);
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot);
+                // Parchment-like color
+                ctx.fillStyle = `rgba(${p.shade},${p.shade - 12},${p.shade - 35}, 0.98)`;
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                // Subtle text decoration
+                ctx.strokeStyle = `rgba(140,110,70,${p.life * 0.45})`;
+                ctx.lineWidth = 0.5;
+                for (let l = -p.h / 2 + 3; l < p.h / 2 - 2; l += 4.5) {
+                    ctx.beginPath();
+                    ctx.moveTo(-p.w / 2 + 4, l);
+                    ctx.lineTo(p.w / 2 - 4, l);
+                    ctx.stroke();
+                }
+                ctx.restore();
+            });
+        }
+
+        // ── Flying Book Sprite Logic ─────────────────────────────────────
+        class FlyingBook {
+            constructor(spawnScattered = false) {
+                this.reset(spawnScattered);
+            }
+
+            reset(scattered = false) {
+                const left = Math.random() > 0.5;
+                this.dir = left ? 1 : -1;
+
+                if (scattered) {
+                    this.x = rnd(0, W);
+                    this.y = rnd(H * 0.05, H * 0.8);
+                } else {
+                    this.x = left ? -300 : W + 300;
+                    this.y = rnd(H * 0.1, H * 0.75);
+                }
+
+                // Speed: majestic slow glide
+                this.vx = this.dir * rnd(0.7, 1.8);
+                this.vy = 0;
+
+                this.scale = rnd(0.28, 0.65);
+                this.imgW = 200 * this.scale;
+                this.imgH = 150 * this.scale;
+
+                this.flapPhase = rnd(0, Math.PI * 2);
+                this.flapSpeed = rnd(0.04, 0.07); // Slow, rhythmic flapping
+                this.flapAmp = 0.65; // Y-scaling amplitude
+
+                this.wavePhase = rnd(0, Math.PI * 2);
+                this.waveFreq = rnd(0.004, 0.01);
+
+                this.alpha = scattered ? rnd(0.4, 1) : 0;
+                this.state = 'flying';
+                this.closeProg = 0;
+                this.isHover = false;
+                this.tilt = 0;
+            }
+
+            isHit(mx, my) {
+                const dx = mx - this.x, dy = my - this.y;
+                return Math.sqrt(dx * dx + dy * dy) < this.imgW * 0.75;
+            }
+
+            close() {
+                if (this.state === 'flying') {
+                    this.state = 'closing';
+                    scatterPages(this.x, this.y, this.scale, this.dir);
+                }
+            }
+
+            update() {
+                if (this.state === 'dead') return false;
+
+                if (this.state === 'closing') {
+                    this.closeProg += 0.08;
+                    this.alpha = Math.max(0, 1 - (this.closeProg - 0.2) * 2.5);
+                    if (this.closeProg >= 1) this.state = 'dead';
+                    return true;
+                }
+
+                this.flapPhase += this.flapSpeed;
+                this.wavePhase += this.waveFreq;
+                this.x += this.vx;
+                this.vy = Math.sin(this.wavePhase) * 0.6;
+                this.y += this.vy;
+                this.tilt = Math.sin(this.wavePhase) * 0.15;
+                this.alpha = Math.min(1, this.alpha + 0.015);
+
+                const dx = mouse.x - this.x, dy = mouse.y - this.y;
+                this.isHover = Math.sqrt(dx * dx + dy * dy) < this.imgW * 0.6;
+
+                // Bounds
+                if (this.x < -400 || this.x > W + 400 || this.y < -300 || this.y > H + 300) return false;
+                return true;
+            }
+
+            draw() {
+                if (this.state === 'dead' || !imgReady) return;
+
+                const flapSin = Math.sin(this.flapPhase);
+                let flapScaleY = 1.0 + flapSin * this.flapAmp * 0.5;
+
+                if (this.state === 'closing') {
+                    flapScaleY *= (1 - this.closeProg);
+                }
+
+                // Perspective effect based on flap
+                const pScaleX = 1.0 - Math.abs(flapSin) * 0.12;
+
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.tilt);
+
+                // Interaction glow
+                if (this.isHover) {
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'screen';
+                    const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, this.imgW * 0.7);
+                    grd.addColorStop(0, 'rgba(255, 235, 160, 0.4)');
+                    grd.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grd;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.imgW * 1.5, this.imgH * 0.7, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                // Flip and animate flap
+                ctx.scale(this.dir * pScaleX, flapScaleY);
+
+                // Use 'screen' to hide the black background if necessary
+                ctx.globalCompositeOperation = 'screen';
+                ctx.drawImage(
+                    bookImg,
+                    -this.imgW / 2, -this.imgH / 2,
+                    this.imgW, this.imgH
+                );
+
+                ctx.restore();
+            }
+        }
+
+        // ── Mystical Leaves (Wind Particle System) ───────────────────────
+        class Leaf {
+            constructor(spawnInside = false) {
+                this.reset(spawnInside);
+            }
+
+            reset(inside = false) {
+                this.size = rnd(4, 9);
+                this.x = inside ? rnd(0, W) : -50;
+                this.y = rnd(0, H);
+
+                // Wind speed + drift
+                this.vx = rnd(0.5, 1.8);
+                this.vy = rnd(0.1, 0.4);
+
+                this.angle = rnd(0, Math.PI * 2);
+                this.angularVel = rnd(-0.02, 0.02);
+
+                this.wavePhase = rnd(0, Math.PI * 2);
+                this.waveSpeed = rnd(0.01, 0.03);
+                this.waveAmp = rnd(0.3, 0.8);
+
+                // Colors: Shades of mystical greens and golds
+                const colors = [
+                    'rgba(145, 185, 130, 0.65)',
+                    'rgba(110, 160, 100, 0.6)',
+                    'rgba(229, 192, 123, 0.55)',
+                    'rgba(180, 140, 80, 0.5)'
+                ];
+                this.color = colors[Math.floor(rnd(0, colors.length))];
+                this.alpha = 0;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.wavePhase += this.waveSpeed;
+                this.y += this.vy + Math.sin(this.wavePhase) * this.waveAmp;
+                this.angle += this.angularVel;
+                this.alpha = Math.min(1, this.alpha + 0.02);
+
+                if (this.x > W + 50 || this.y > H + 50) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.color;
+
+                // Simple leaf shape
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size);
+                ctx.quadraticCurveTo(this.size / 2, 0, 0, this.size);
+                ctx.quadraticCurveTo(-this.size / 2, 0, 0, -this.size);
+                ctx.fill();
+
+                // Subtle veins
+                ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size);
+                ctx.lineTo(0, this.size);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        // ── Main Scene Control ───────────────────────────────────────────
+        let flyingBooks = [];
+        let leaves = [];
+
+        function initScene() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            // Spawn initial books
+            flyingBooks = Array.from({ length: 12 }, () => new FlyingBook(true));
+            // Spawn leaves
+            leaves = Array.from({ length: 45 }, () => new Leaf(true));
+        }
+
+        let lastT = 0;
+        function loop(t) {
+            requestAnimationFrame(loop);
+            const dt = t - lastT; lastT = t;
+            if (dt > 100) return;
+
+            ctx.clearRect(0, 0, W, H);
+
+            // Draw leaves behind everything
+            leaves.forEach(l => {
+                l.update();
+                l.draw();
+            });
+
+            // Maintain book population
+            if (Math.random() < 0.018 && flyingBooks.filter(b => b.state === 'flying').length < 24) {
+                flyingBooks.push(new FlyingBook(false));
+            }
+
+            flyingBooks = flyingBooks.filter(b => b.update());
+            flyingBooks.forEach(b => b.draw());
+
+            updatePageParticles();
+            drawPageParticles();
+        }
+
+        // Startup
+        initScene();
+        requestAnimationFrame(loop);
+
+        // ── Contact Form Handling ────────────────────────────────────────
+        function handleNotify(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = 'Enviado ✓';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+            document.getElementById('notify-confirm').style.display = 'block';
+            e.target.querySelector('input').value = '';
+        }
+    </script>
+    <script src="cookies.js" defer></script>
+</body>
+
+</html>

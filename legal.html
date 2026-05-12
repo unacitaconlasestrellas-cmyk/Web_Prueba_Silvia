@@ -1,12 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Información Legal | Las Estrellas te Guían</title>
+    <link rel="icon" type="image/png" href="logo_silvia.png?v=2">
+    <link rel="stylesheet" href="cookies.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    
+    <script>
+        (function() {
+            const img = new Image();
+            img.src = 'logo_silvia.png';
+            img.crossOrigin = 'anonymous'; 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+                let found = false;
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const alpha = data[(y * canvas.width + x) * 4 + 3];
+                        if (alpha > 10) {
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+                if (!found) return;
+                const cropWidth = maxX - minX;
+                const cropHeight = maxY - minY;
+                const finalSize = 128;
+                const outputCanvas = document.createElement('canvas');
+                outputCanvas.width = finalSize;
+                outputCanvas.height = finalSize;
+                const octx = outputCanvas.getContext('2d');
+                const maxDim = Math.max(cropWidth, cropHeight);
+                const scale = finalSize / maxDim;
+                const xOffset = (finalSize - cropWidth * scale) / 2;
+                const yOffset = (finalSize - cropHeight * scale) / 2;
+                octx.drawImage(img, minX, minY, cropWidth, cropHeight, xOffset, yOffset, cropWidth * scale, cropHeight * scale);
+                const link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = outputCanvas.toDataURL();
+                const oldLinks = document.querySelectorAll('link[rel="icon"]');
+                oldLinks.forEach(el => el.parentNode.removeChild(el));
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        })();
+    </script>
     <style>
         :root {
             --main-bg: #fdfdfd;
@@ -14,7 +70,13 @@
             --text-muted: #555555;
             --gold: #c5a363;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--main-bg);
             color: var(--text-dark);
@@ -27,11 +89,14 @@
         /* Leaf Shadow Animation */
         .leaf-container {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
+
         .leaf-shadow {
             position: absolute;
             background-image: url('sombra_hoja.png');
@@ -43,171 +108,325 @@
         }
 
         @keyframes fall {
-            0% { transform: translateY(-100px) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.04; }
-            90% { opacity: 0.04; }
-            100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
+            0% {
+                transform: translateY(-100px) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.04;
+            }
+
+            90% {
+                opacity: 0.04;
+            }
+
+            100% {
+                transform: translateY(110vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         /* Header (Standard consistent from other pages but adjusted for white) */
         header {
-            display:flex; justify-content:space-between; align-items:center;
-            padding:4rem 5rem; max-width:1600px; margin:0 auto;
-            position:relative; z-index:100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 100;
         }
-        .logo-image { height:180px; width:auto; filter: grayscale(1) contrast(1.2); transition: transform 0.3s; }
-        .logo-image:hover { transform: scale(1.02); }
-        nav ul { display:flex; list-style:none; gap:4.5rem; }
-        nav a { text-decoration:none; color:var(--text-dark); font-size:1.2rem; font-weight:600; transition: color 0.3s; }
-        nav a:hover { color:var(--gold); }
-        .social-icons { display:flex; gap:2rem; }
-        .social-icons svg { width:28px; height:28px; fill:var(--text-dark); transition: fill 0.3s, transform 0.3s; }
-        .social-icons svg:hover { fill:var(--gold); transform: scale(1.1); }
+
+        .logo-image {
+            height: clamp(100px, 15vw, 240px);
+            width: auto;
+            filter: drop-shadow(0 0 15px rgba(229, 192, 123, 0.5));
+            transition: transform 0.3s;
+        }
+
+        .logo-image:hover {
+            transform: scale(1.05);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 4.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            font-weight: 600;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .social-icons svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--text-dark);
+            transition: fill 0.3s, transform 0.3s;
+        }
+
+        .social-icons svg:hover {
+            fill: var(--gold);
+            transform: scale(1.1);
+        }
 
         main {
             position: relative;
             z-index: 10;
             max-width: 900px;
             margin: 0 auto;
-            padding: 4rem 2rem 10rem;
+            padding: 1.5rem 2rem 10rem;
         }
-        .legal-header { text-align: center; margin-bottom: 6rem; }
-        .legal-header h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 400; color: var(--text-dark); }
-        .legal-header div { width: 100px; height: 1px; background: var(--gold); margin: 2rem auto; }
 
-        .legal-section { margin-bottom: 5rem; }
-        .legal-section h2 { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 2rem; 
-            margin-bottom: 2rem; 
+        .legal-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .legal-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 400;
+            color: var(--text-dark);
+        }
+
+        .legal-header div {
+            width: 100px;
+            height: 1px;
+            background: var(--gold);
+            margin: 2rem auto;
+        }
+
+        .legal-section {
+            margin-bottom: 5rem;
+        }
+
+        .legal-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
             color: var(--gold);
             border-bottom: 1px solid #eee;
             padding-bottom: 0.5rem;
         }
-        .legal-section h3 { font-size: 1.1rem; margin: 2rem 0 1rem; color: #333; }
-        .legal-section p { margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem; text-align: justify; }
-        .legal-section ul { margin: 1rem 0 2rem 2rem; }
-        .legal-section li { margin-bottom: 0.8rem; color: var(--text-muted); font-size: 0.95rem; }
 
-        footer { text-align: center; padding: 4rem; border-top: 1px solid #f0f0f0; color: #999; font-size: 0.8rem; }
+        .legal-section h3 {
+            font-size: 1.1rem;
+            margin: 2rem 0 1rem;
+            color: #333;
+        }
+
+        .legal-section p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        .legal-section ul {
+            margin: 1rem 0 2rem 2rem;
+        }
+
+        .legal-section li {
+            margin-bottom: 0.8rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid #f0f0f0;
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 2rem 1rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .social-icons {
+                gap: 1.5rem;
+            }
+
+            .legal-section h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .legal-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .legal-section h2 {
+                font-size: 1.4rem;
+            }
+
+            .legal-section p, .legal-section li {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
-<body>
+<body>
 
-<div class="leaf-container" id="leafContainer"></div>
+    <main>
+        <div class="legal-header">
+            <h1>Información Legal</h1>
+            <div></div>
+        </div>
 
-<header>
-    <div class="logo"><a href="index.html"><img src="logo_silvia.png" alt="Las Estrellas te Guían" class="logo-image"></a></div>
-    <nav><ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="servicios.html">Servicios</a></li>
-        <li><a href="articulos.html">Artículos de interés</a></li>
-        <li><a href="legal.html" style="color:var(--gold)">Información legal</a></li>
-    </ul></nav>
-    <div class="social-icons">
-        <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z"/></svg></a>
-        <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z"/></svg></a>
-    </div>
-</header>
+        <div class="legal-section">
+            <h2>1. Aviso legal</h2>
+            <p><strong>Titular del sitio web:</strong> Silvia de los ángeles<br>
+                <strong>Correo de contacto:</strong> <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                    target="_blank" rel="noopener noreferrer"
+                    style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a>
+            </p>
 
-<main>
-    <div class="legal-header">
-        <h1>Información Legal</h1>
-        <div></div>
-    </div>
+            <p>Esta web tiene por objeto informar sobre servicios de astrología, contenidos divulgativos y formas de
+                contacto profesional.</p>
 
-    <div class="legal-section">
-        <h2>1. Aviso legal</h2>
-        <p><strong>Titular del sitio web:</strong> Silvia de los ángeles<br>
-        <strong>Correo de contacto:</strong> <a href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com" target="_blank" rel="noopener noreferrer" style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
-        
-        <p>Esta web tiene por objeto informar sobre servicios de astrología, contenidos divulgativos y formas de contacto profesional.</p>
-        
-        <p>La persona usuaria se compromete a hacer un uso adecuado de la web y de sus contenidos. No está permitido utilizar este sitio con fines ilícitos, dañar su funcionamiento ni intentar acceder de forma no autorizada a sus sistemas o contenidos.</p>
-        
-        <p>Los textos, imágenes, diseños y demás contenidos de esta web son titularidad de la persona responsable del sitio o se utilizan con autorización legítima. Queda prohibida su reproducción, distribución o transformación sin autorización previa, salvo los usos permitidos por la ley.</p>
-        
-        <p>Esta web puede incluir enlaces a redes sociales o páginas de terceros. No se asume responsabilidad por los contenidos o políticas de privacidad de dichos sitios.</p>
-        
-        <p>Los contenidos ofrecidos en esta web tienen carácter informativo, divulgativo y profesional dentro del ámbito de la astrología y el desarrollo personal. No sustituyen asesoramiento médico, psicológico, legal, fiscal o financiero profesional.</p>
-    </div>
+            <p>La persona usuaria se compromete a hacer un uso adecuado de la web y de sus contenidos. No está permitido
+                utilizar este sitio con fines ilícitos, dañar su funcionamiento ni intentar acceder de forma no
+                autorizada a sus sistemas o contenidos.</p>
 
-    <div class="legal-section">
-        <h2>2. Política de privacidad</h2>
-        <p><strong>Responsable del tratamiento:</strong> Silvia de los ángeles<br>
-        <strong>Correo electrónico:</strong> <a href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com" target="_blank" rel="noopener noreferrer" style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
-        
-        <p>Los datos personales que la persona usuaria facilite a través del formulario de contacto o por correo electrónico se tratarán con la finalidad de atender consultas, gestionar posibles contrataciones, prestar los servicios solicitados y cumplir las obligaciones legales aplicables.</p>
-        
-        <p>La base legal del tratamiento será, según el caso, el consentimiento de la persona interesada, la aplicación de medidas precontractuales, la ejecución de un contrato o el cumplimiento de obligaciones legales.</p>
-        
-        <p>Se tratarán únicamente los datos necesarios para cada finalidad, como nombre, correo electrónico y los datos que la persona usuaria facilite voluntariamente.</p>
-        
-        <p>Los datos se conservarán durante el tiempo necesario para atender la consulta o prestar el servicio y, posteriormente, durante los plazos legalmente exigibles.</p>
-        
-        <p>Con carácter general, no se cederán datos a terceros salvo obligación legal o cuando sea necesario para la prestación del servicio. Determinados proveedores técnicos podrán acceder a los datos en calidad de encargados del tratamiento.</p>
-        
-        <p>La persona usuaria puede ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento, portabilidad y retirada del consentimiento escribiendo a <a href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com" target="_blank" rel="noopener noreferrer" style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a>. Si considera que sus derechos no han sido atendidos correctamente, puede reclamar ante la Agencia Española de Protección de Datos.</p>
-        
-        <p>Los servicios de esta web están dirigidos con carácter general a mayores de edad. Podrán ser solicitados por personas de 16 o 17 años si comprenden adecuadamente el alcance del servicio. No está previsto el uso de esta web para contratación autónoma por menores de 16 años.</p>
-        
-        <p>Los servicios de astrología tienen un enfoque simbólico y de desarrollo personal y no garantizan resultados concretos ni sustituyen atención profesional en otros ámbitos.</p>
-    </div>
+            <p>Los textos, imágenes, diseños y demás contenidos de esta web son titularidad de la persona responsable
+                del sitio o se utilizan con autorización legítima. Queda prohibida su reproducción, distribución o
+                transformación sin autorización previa, salvo los usos permitidos por la ley.</p>
 
-    <div class="legal-section">
-        <h2>3. Política de cookies</h2>
-        <p>Esta web utiliza cookies técnicas necesarias para su funcionamiento. Estas cookies permiten la navegación y el uso básico del sitio.</p>
-        
-        <p>Actualmente, esta web no tiene como finalidad instalar cookies de análisis, publicidad o marketing adicionales, sin perjuicio de las cookies técnicas que pueda utilizar la plataforma para el funcionamiento del sitio.</p>
-        
-        <p>La persona usuaria puede configurar o bloquear las cookies desde su navegador, aunque la desactivación de determinadas cookies técnicas puede afectar al funcionamiento de la web.</p>
-        
-        <p>Si en el futuro se incorporan cookies no necesarias, esta política será actualizada y se habilitará el sistema de consentimiento correspondiente.</p>
-    </div>
+            <p>Esta web puede incluir enlaces a redes sociales o páginas de terceros. No se asume responsabilidad por
+                los contenidos o políticas de privacidad de dichos sitios.</p>
 
-    <div class="legal-section">
-        <h2>4. Condiciones de contratación</h2>
-        <p>A través de esta web se ofrece información sobre servicios de astrología. La contratación podrá realizarse por contacto directo mediante correo electrónico u otro medio acordado entre las partes.</p>
-        
-        <p>Antes de confirmar un servicio, se informará de forma clara sobre el contenido del servicio, precio, forma de pago, modalidad de realización y condiciones de cancelación.</p>
-        
-        <p>El pago deberá realizarse por adelantado, antes de la prestación del servicio, mediante transferencia bancaria u otro medio acordado expresamente.</p>
-        
-        <p>La persona cliente podrá cancelar o solicitar cambio de fecha con una antelación mínima de 24 horas. Si la cancelación se produce con menos de 24 horas de antelación, o si no comparece sin causa justificada aceptada, se perderá el importe abonado.</p>
-        
-        <p>No se realizan devoluciones una vez reservado y abonado el servicio, salvo cancelación por parte de la titular, en cuyo caso se ofrecerá nueva fecha o devolución íntegra del importe abonado.</p>
-        
-        <p>La relación entre la titular y la persona usuaria se regirá por la legislación española.</p>
-    </div>
-</main>
+            <p>Los contenidos ofrecidos en esta web tienen carácter informativo, divulgativo y profesional dentro del
+                ámbito de la astrología y el desarrollo personal. No sustituyen asesoramiento médico, psicológico,
+                legal, fiscal o financiero profesional.</p>
+        </div>
 
-<footer>
-    &copy; 2026 Las Estrellas te Guían. Todos los derechos reservados.
-</footer>
+        <div class="legal-section">
+            <h2>2. Política de privacidad</h2>
+            <p><strong>Responsable del tratamiento:</strong> Silvia de los ángeles<br>
+                <strong>Correo electrónico:</strong> <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                    target="_blank" rel="noopener noreferrer"
+                    style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a>
+            </p>
 
-<script>
-    function createLeaf() {
-        const leaf = document.createElement('div');
-        leaf.className = 'leaf-shadow';
-        
-        const size = 30 + Math.random() * 70;
-        leaf.style.width = size + 'px';
-        leaf.style.height = size + 'px';
-        
-        leaf.style.left = Math.random() * 100 + 'vw';
-        leaf.style.top = '-100px';
-        
-        const duration = 10 + Math.random() * 15;
-        leaf.style.animation = `fall ${duration}s linear infinite`;
-        leaf.style.animationDelay = Math.random() * -20 + 's';
-        
-        document.getElementById('leafContainer').appendChild(leaf);
-    }
+            <p>Los datos personales que la persona usuaria facilite a través del formulario de contacto o por correo
+                electrónico se tratarán con la finalidad de atender consultas, gestionar posibles contrataciones,
+                prestar los servicios solicitados y cumplir las obligaciones legales aplicables.</p>
 
-    for (let i = 0; i < 20; i++) {
-        createLeaf();
-    }
-</script>
+            <p>La base legal del tratamiento será, según el caso, el consentimiento de la persona interesada, la
+                aplicación de medidas precontractuales, la ejecución de un contrato o el cumplimiento de obligaciones
+                legales.</p>
 
+            <p>Se tratarán únicamente los datos necesarios para cada finalidad, como nombre, correo electrónico y los
+                datos que la persona usuaria facilite voluntariamente.</p>
+
+            <p>Los datos se conservarán durante el tiempo necesario para atender la consulta o prestar el servicio y,
+                posteriormente, durante los plazos legalmente exigibles.</p>
+
+            <p>Con carácter general, no se cederán datos a terceros salvo obligación legal o cuando sea necesario para
+                la prestación del servicio. Determinados proveedores técnicos podrán acceder a los datos en calidad de
+                encargados del tratamiento.</p>
+
+            <p>La persona usuaria puede ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación
+                del tratamiento, portabilidad y retirada del consentimiento escribiendo a <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                    target="_blank" rel="noopener noreferrer"
+                    style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a>. Si considera que sus
+                derechos no han sido atendidos correctamente, puede reclamar ante la Agencia Española de Protección de
+                Datos.</p>
+
+            <p>Los servicios de esta web están dirigidos con carácter general a mayores de edad. Podrán ser solicitados
+                por personas de 16 o 17 años si comprenden adecuadamente el alcance del servicio. No está previsto el
+                uso de esta web para contratación autónoma por menores de 16 años.</p>
+
+            <p>Los servicios de astrología tienen un enfoque simbólico y de desarrollo personal y no garantizan
+                resultados concretos ni sustituyen atención profesional en otros ámbitos.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>3. Política de cookies</h2>
+            <p>Esta web utiliza cookies técnicas necesarias para su funcionamiento. Estas cookies permiten la navegación
+                y el uso básico del sitio.</p>
+
+            <p>Atualmente, esta web no tiene como finalidad instalar cookies de análisis, publicidad o marketing
+                adicionales, sin perjuicio de las cookies técnicas que pueda utilizar la plataforma para el
+                funcionamiento del sitio.</p>
+
+            <p>La persona usuaria puede configurar o bloquear las cookies desde su navegador, aunque la desactivación de
+                determinadas cookies técnicas puede afectar al funcionamiento de la web.</p>
+
+            <p>Si en el futuro se incorporan cookies no necesarias, esta política será actualizada y se habilitará el
+                sistema de consentimiento correspondiente.</p>
+        </div>
+
+        <div class="legal-section">
+            <h2>4. Condiciones de contratación</h2>
+            <p>A través de esta web se ofrece información sobre servicios de astrología. La contratación podrá
+                realizarse por contacto directo mediante correo electrónico u otro medio acordado entre las partes.</p>
+
+            <p>Antes de confirmar un servicio, se informará de forma clara sobre el contenido del servicio, precio,
+                forma de pago, modalidad de realización y condiciones de cancelación.</p>
+
+            <p>El pago deberá realizarse por adelantado, antes de la prestación del servicio, mediante transferencia
+                bancaria u otro medio acordado expresamente.</p>
+
+            <p>La persona cliente podrá cancelar o solicitar cambio de fecha con una antelación mínima de 24 horas. Si
+                la cancelación se produce con menos de 24 horas de antelación, o si no comparece sin causa justificada
+                aceptada, se perderá el importe abonado.</p>
+
+            <p>No se realizan devoluciones una vez reservado y abonado el servicio, salvo cancelación por parte de la
+                titular, en cuyo caso se ofrecerá nueva fecha o devolución íntegra del importe abonado.</p>
+
+            <p>La relación entre la titular y la persona usuaria se regirá por la legislación española.</p>
+        </div>
+    </main>
+
+    <script>
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf-shadow');
+            leaf.style.width = Math.random() * 100 + 50 + 'px';
+            leaf.style.height = leaf.style.width;
+            leaf.style.left = Math.random() * 100 + 'vw';
+            leaf.style.animation = `fall ${Math.random() * 10 + 10}s linear infinite`;
+            leaf.style.animationDelay = Math.random() * 10 + 's';
+            document.body.appendChild(leaf);
+        }
+
+        for (let i = 0; i < 20; i++) {
+            createLeaf();
+        }
+    </script>
+    <script src="cookies.js" defer></script>
 </body>
 </html>

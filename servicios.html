@@ -1,16 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Servicios y Tarifas | Las Estrellas te Guían</title>
-    <meta name="description" content="Consultas de astrología, carta natal y tránsitos. Descubre los servicios y tarifas de Silvia.">
+    <meta name="description"
+        content="Consultas de astrología, carta natal y tránsitos. Descubre los servicios y tarifas de Silvia.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Servicios de Astrología | Las Estrellas te Guían">
+    <meta property="og:description" content="Consulta tu carta natal y tránsitos planetarios. Espacios de sanación y guía espiritual.">
+    <meta property="og:image" content="logo_silvia.png">
+    <meta property="og:url" content="https://unacitaconlasestrellas.com/servicios.html">
+
+    <link rel="icon" type="image/png" href="logo_silvia.png?v=2">
+    <link rel="stylesheet" href="cookies.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@400;600&display=swap"
+        rel="stylesheet">
+    
+    <!-- Dynamic Favicon Optimization -->
+    <script>
+        (function() {
+            const img = new Image();
+            img.src = 'logo_silvia.png';
+            img.crossOrigin = 'anonymous'; 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+                let found = false;
+
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const alpha = data[(y * canvas.width + x) * 4 + 3];
+                        if (alpha > 10) { // Found a non-transparent pixel
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+
+                if (!found) return;
+
+                const cropWidth = maxX - minX;
+                const cropHeight = maxY - minY;
+                const finalSize = 128;
+                const outputCanvas = document.createElement('canvas');
+                outputCanvas.width = finalSize;
+                outputCanvas.height = finalSize;
+                const octx = outputCanvas.getContext('2d');
+                
+                // Keep aspect ratio and center
+                const maxDim = Math.max(cropWidth, cropHeight);
+                const scale = finalSize / maxDim;
+                const xOffset = (finalSize - cropWidth * scale) / 2;
+                const yOffset = (finalSize - cropHeight * scale) / 2;
+                
+                octx.drawImage(img, minX, minY, cropWidth, cropHeight, xOffset, yOffset, cropWidth * scale, cropHeight * scale);
+                
+                const link = document.createElement('link');
+                link.rel = 'icon';
+                link.type = 'image/png';
+                link.href = outputCanvas.toDataURL();
+                const oldLinks = document.querySelectorAll('link[rel="icon"]');
+                oldLinks.forEach(el => el.parentNode.removeChild(el));
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        })();
+    </script>
     <style>
         :root {
-            --nav-text: #1b1228; /* Texto muy oscuro, navy profundo, para fondo claro */
+            --nav-text: #1b1228;
+            /* Texto muy oscuro, navy profundo, para fondo claro */
             --main-text: #1b1228;
             --btn-bg: #0f0a21;
             --gold: #c9982a;
@@ -25,13 +100,22 @@
         }
 
         @keyframes driftClouds {
-            0%   { background-position: left center; }
-            50%  { background-position: right center; }
-            100% { background-position: left center; }
+            0% {
+                background-position: left center;
+            }
+
+            50% {
+                background-position: right center;
+            }
+
+            100% {
+                background-position: left center;
+            }
         }
 
         body {
-            background-color: #b8d4e8; /* Fallback azul cielo */
+            background-color: #b8d4e8;
+            /* Fallback azul cielo */
             background-image: url('fondo_servicios.png');
             background-size: 130vw 130vh;
             background-repeat: no-repeat;
@@ -46,17 +130,22 @@
         /* --- Canvas --- */
         #interactive-layer {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 1;
             pointer-events: none;
         }
 
-        h1, h2, h3, .title-font {
+        h1,
+        h2,
+        h3,
+        .title-font {
             font-family: 'Playfair Display', serif;
             font-weight: 400;
             color: var(--main-text);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         }
 
         /* --- Header --- */
@@ -64,8 +153,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 3rem;
-            max-width: 1400px;
+            padding: 2rem 2rem;
+            max-width: 1700px;
             margin: 0 auto;
             position: absolute;
             left: 50%;
@@ -74,17 +163,28 @@
             z-index: 100;
         }
 
-        .logo { display: flex; align-items: center; cursor: pointer; }
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
 
         .logo-image {
             height: 190px;
             width: auto;
-            filter: drop-shadow(0 0 15px rgba(229,192,123,0.5));
+            filter: drop-shadow(0 0 15px rgba(229, 192, 123, 0.5));
             transition: transform 0.3s ease;
         }
-        .logo:hover .logo-image { transform: scale(1.05); }
 
-        nav ul { display: flex; list-style: none; gap: 4.5rem; }
+        .logo:hover .logo-image {
+            transform: scale(1.05);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
 
         nav a {
             text-decoration: none;
@@ -93,78 +193,44 @@
             font-weight: 600;
             transition: opacity 0.3s ease;
             position: relative;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
         }
+
         nav a.active::after {
             content: '';
             position: absolute;
-            bottom: -8px; left: 0;
-            width: 100%; height: 3px;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
             background: var(--nav-text);
         }
-        nav a:hover { opacity: 0.8; }
 
-        .social-icons { display: flex; gap: 1.5rem; align-items: center; }
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
         .social-icons svg {
-            width: 34px; height: 34px;
+            width: 34px;
+            height: 34px;
             fill: var(--nav-text);
             transition: opacity 0.3s ease;
             cursor: pointer;
-        }
-        .social-icons svg:hover { opacity: 0.7; }
-
-        /* --- Zodiac Layer --- */
-        #zodiac-layer {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
             pointer-events: none;
-            z-index: 2;
         }
 
-        @keyframes floatA {
-            0%   { transform: translateY(0px)   translateX(0px)  rotate(0deg); }
-            25%  { transform: translateY(-18px)  translateX(10px) rotate(5deg); }
-            50%  { transform: translateY(-8px)   translateX(-12px) rotate(-4deg); }
-            75%  { transform: translateY(-22px)  translateX(6px)  rotate(8deg); }
-            100% { transform: translateY(0px)   translateX(0px)  rotate(0deg); }
-        }
-        @keyframes floatB {
-            0%   { transform: translateY(0px)   translateX(0px)  rotate(0deg); }
-            30%  { transform: translateY(14px)   translateX(-9px) rotate(-6deg); }
-            60%  { transform: translateY(-16px)  translateX(14px) rotate(7deg); }
-            100% { transform: translateY(0px)   translateX(0px)  rotate(0deg); }
-        }
-        @keyframes floatC {
-            0%   { transform: translateY(0px)   translateX(0px); }
-            40%  { transform: translateY(-20px)  translateX(-10px); }
-            80%  { transform: translateY(10px)   translateX(15px); }
-            100% { transform: translateY(0px)   translateX(0px); }
+        .social-icons svg:hover {
+            opacity: 0.7;
         }
 
-        /* Cada signo tiene su propia animación y duración única para que se muevan de forma natural e independiente */
-        .zodiac-icon {
-            position: absolute;
-            width: 50px; height: 50px;
-            cursor: grab;
-            filter: drop-shadow(0 2px 6px rgba(100,70,10,0.5));
-            pointer-events: auto;
-            touch-action: none;
-            opacity: 0.85;
-        }
-        .zodiac-icon:nth-child(1)  { animation: floatA 18s ease-in-out infinite; }
-        .zodiac-icon:nth-child(2)  { animation: floatB 22s ease-in-out infinite; }
-        .zodiac-icon:nth-child(3)  { animation: floatC 20s ease-in-out infinite; }
-        .zodiac-icon:nth-child(4)  { animation: floatA 24s ease-in-out infinite reverse; }
-        .zodiac-icon:nth-child(5)  { animation: floatB 19s ease-in-out infinite; }
-        .zodiac-icon:nth-child(6)  { animation: floatC 26s ease-in-out infinite reverse; }
-        .zodiac-icon:nth-child(7)  { animation: floatA 21s ease-in-out infinite; }
-        .zodiac-icon:nth-child(8)  { animation: floatB 17s ease-in-out infinite reverse; }
-        .zodiac-icon:nth-child(9)  { animation: floatC 23s ease-in-out infinite; }
-        .zodiac-icon:nth-child(10) { animation: floatA 28s ease-in-out infinite; }
-        .zodiac-icon:nth-child(11) { animation: floatB 15s ease-in-out infinite reverse; }
-        .zodiac-icon:nth-child(12) { animation: floatC 25s ease-in-out infinite; }
-        .zodiac-icon:active { cursor: grabbing; }
+
 
         /* --- Main --- */
         main {
@@ -173,10 +239,13 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 2rem;
-            padding-top: 300px;
+            padding-top: 180px;
             pointer-events: none;
         }
-        main * { pointer-events: auto; }
+
+        main * {
+            pointer-events: auto;
+        }
 
         /* --- Page Title --- */
         .page-header {
@@ -187,18 +256,20 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
             padding: 2.5rem 3rem;
         }
+
         .page-header h1 {
-            font-size: 4.2rem;
+            font-size: clamp(2.2rem, 7vw, 4.2rem);
             font-weight: 600;
             letter-spacing: 1px;
             margin-bottom: 0.8rem;
             color: #1b1228;
             text-shadow: none;
         }
+
         .page-header p {
             font-size: 1rem;
             color: #2d1f4e;
@@ -220,8 +291,8 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
             padding: 3rem 2.5rem;
         }
 
@@ -240,12 +311,13 @@
             color: #1b1228;
             margin-bottom: 0.5rem;
         }
+
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 0.9rem 1.2rem;
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.15);
             border-radius: 12px;
             color: #1b1228;
             font-family: 'Montserrat', sans-serif;
@@ -253,14 +325,17 @@
             outline: none;
             transition: border-color 0.3s;
         }
+
         .form-group input::placeholder,
         .form-group textarea::placeholder {
-            color: rgba(0,0,0,0.35);
+            color: rgba(0, 0, 0, 0.35);
         }
+
         .form-group input:focus,
         .form-group textarea:focus {
             border-color: #c9982a;
         }
+
         .form-group textarea {
             resize: vertical;
             min-height: 130px;
@@ -278,14 +353,15 @@
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
             transition: transform 0.3s, box-shadow 0.3s;
             margin-top: 0.5rem;
             display: inline-block;
         }
+
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         }
 
         /* --- Success Message --- */
@@ -293,21 +369,30 @@
             display: none;
             margin-top: 1.5rem;
             padding: 1.2rem 1.5rem;
-            background: rgba(45, 27, 94, 0.85); /* Fondo oscuro místico */
-            border: 1px solid rgba(229, 192, 123, 0.4); /* Borde dorado tenue */
+            background: rgba(45, 27, 94, 0.85);
+            /* Fondo oscuro místico */
+            border: 1px solid rgba(229, 192, 123, 0.4);
+            /* Borde dorado tenue */
             border-radius: 16px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             align-items: center;
             gap: 1.2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             opacity: 0;
             transform: translateY(15px);
         }
-        
+
         @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .success-icon {
@@ -324,7 +409,7 @@
             line-height: 1.5;
             margin: 0;
         }
-        
+
         .success-msg p span {
             display: block;
             color: rgba(253, 251, 247, 0.75);
@@ -343,16 +428,19 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
             padding: 2rem 2.5rem;
         }
 
         .servicio-item {
             padding: 2.2rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         }
-        .servicio-item:last-child { border-bottom: none; }
+
+        .servicio-item:last-child {
+            border-bottom: none;
+        }
 
         .servicio-item h3 {
             font-family: 'Playfair Display', serif;
@@ -380,15 +468,83 @@
         }
 
         /* --- SVG Icons Hidden --- */
-        .icon-defs { display: none; }
+        .icon-defs {
+            display: none;
+        }
 
         /* --- Responsive --- */
         @media (max-width: 900px) {
-            header { padding: 1.5rem 2rem; flex-direction: column; gap: 1rem; position: relative; }
-            main { padding-top: 2rem; }
-            .servicios-layout { grid-template-columns: 1fr; gap: 3rem; }
-            .page-header h1 { font-size: 2.8rem; }
-            nav ul { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+            header {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1.5rem;
+                position: relative;
+                transform: none;
+                left: 0;
+            }
+
+            .logo-image {
+                height: 150px;
+            }
+
+            nav a {
+                font-size: 1.3rem;
+            }
+
+            main {
+                padding-top: 2rem;
+            }
+
+            .servicios-layout {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .page-header {
+                padding: 2rem;
+                margin-bottom: 2.5rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .logo-image {
+                height: 110px;
+            }
+
+            nav a {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .contact-col {
+                padding: 2rem 1.5rem;
+            }
+
+            .lista-servicios {
+                padding: 1.5rem;
+            }
+
+            .servicio-item h3 {
+                font-size: 1.4rem;
+            }
         }
 
         /* --- SITE FOOTER --- */
@@ -402,6 +558,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
         }
+
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -409,9 +566,11 @@
             grid-template-columns: 1fr 1fr 1fr;
             align-items: center;
         }
+
         .footer-contact {
             text-align: center;
         }
+
         .footer-contact h2 {
             font-family: 'Playfair Display', serif;
             font-size: 2.2rem;
@@ -419,33 +578,45 @@
             letter-spacing: 2px;
             color: #fff;
         }
+
         .footer-contact p {
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
             opacity: 0.9;
         }
+
         .footer-contact a {
             color: #fff;
             text-decoration: underline;
             transition: opacity 0.3s;
         }
-        .footer-contact a:hover { opacity: 0.7; }
+
+        .footer-contact a:hover {
+            opacity: 0.7;
+        }
+
         .footer-socials {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
+
         .footer-socials svg {
             width: 28px;
             height: 28px;
             fill: #fff;
             transition: transform 0.3s;
         }
-        .footer-socials svg:hover { transform: scale(1.1); }
+
+        .footer-socials svg:hover {
+            transform: scale(1.1);
+        }
+
         .footer-legal {
             text-align: right;
         }
+
         .footer-legal a {
             color: #fff;
             text-decoration: none;
@@ -455,12 +626,17 @@
             opacity: 0.8;
             transition: opacity 0.3s;
         }
-        .footer-legal a:hover { opacity: 1; }
+
+        .footer-legal a:hover {
+            opacity: 1;
+        }
+
         .footer-copyright {
             font-size: 0.75rem;
             opacity: 0.6;
             margin-top: 0.5rem;
         }
+
         .footer-moon {
             position: absolute;
             left: 58%;
@@ -468,62 +644,50 @@
             transform: translateY(-50%);
             width: 80px;
             height: 80px;
-            filter: drop-shadow(0 0 15px rgba(255,251,211,0.6));
+            filter: drop-shadow(0 0 15px rgba(255, 251, 211, 0.6));
             opacity: 0.7;
             pointer-events: none;
             z-index: 0;
         }
+
         @media (max-width: 992px) {
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
                 gap: 3rem;
             }
-            .footer-legal { text-align: center; }
-            .footer-moon { display: none; }
+
+            .footer-legal {
+                text-align: center;
+            }
+
+            .footer-moon {
+                display: none;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Hidden SVG Definitions -->
     <svg class="icon-defs">
-        <symbol id="icon-ig" viewBox="0 0 24 24"><path d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z"/></symbol>
-        <symbol id="icon-tk" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z"/></symbol>
+        <symbol id="icon-ig" viewBox="0 0 24 24">
+            <path
+                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+        </symbol>
+        <symbol id="icon-tk" viewBox="0 0 24 24">
+            <path
+                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+        </symbol>
 
-        <!-- ZODIAC GLYPHS -->
-        <symbol id="icon-aries"       viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♈</text></symbol>
-        <symbol id="icon-taurus"      viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♉</text></symbol>
-        <symbol id="icon-gemini"      viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♊</text></symbol>
-        <symbol id="icon-cancer"      viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♋</text></symbol>
-        <symbol id="icon-leo"         viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♌</text></symbol>
-        <symbol id="icon-virgo"       viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♍</text></symbol>
-        <symbol id="icon-libra"       viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♎</text></symbol>
-        <symbol id="icon-scorpio"     viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♏</text></symbol>
-        <symbol id="icon-sagittarius" viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♐</text></symbol>
-        <symbol id="icon-capricorn"   viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♑</text></symbol>
-        <symbol id="icon-aquarius"    viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♒</text></symbol>
-        <symbol id="icon-pisces"      viewBox="0 0 100 100"><text x="50" y="70" font-size="70" font-family="'Segoe UI Symbol',Arial,sans-serif" fill="#E5C07B" text-anchor="middle">♓</text></symbol>
+
     </svg>
 
     <!-- Canvas de constelaciones -->
     <canvas id="interactive-layer"></canvas>
 
-    <!-- Signos del Zodiaco flotantes -->
-    <div id="zodiac-layer">
-        <svg class="zodiac-icon" style="top: 12%; left: 8%;"  ><use href="#icon-aries"       /></svg>
-        <svg class="zodiac-icon" style="top: 28%; left: 2%;"  ><use href="#icon-taurus"      /></svg>
-        <svg class="zodiac-icon" style="top: 8%;  right: 12%;"><use href="#icon-gemini"       /></svg>
-        <svg class="zodiac-icon" style="top: 42%; left: 4%;"  ><use href="#icon-cancer"      /></svg>
-        <svg class="zodiac-icon" style="top: 48%; right: 6%;" ><use href="#icon-leo"          /></svg>
-        <svg class="zodiac-icon" style="top: 62%; left: 12%;" ><use href="#icon-virgo"        /></svg>
-        <svg class="zodiac-icon" style="top: 72%; left: 38%;" ><use href="#icon-libra"        /></svg>
-        <svg class="zodiac-icon" style="top: 66%; right: 22%;"><use href="#icon-scorpio"      /></svg>
-        <svg class="zodiac-icon" style="top: 85%; right: 8%;" ><use href="#icon-sagittarius"  /></svg>
-        <svg class="zodiac-icon" style="top: 80%; left: 68%;" ><use href="#icon-capricorn"   /></svg>
-        <svg class="zodiac-icon" style="top: 52%; left: 82%;" ><use href="#icon-aquarius"    /></svg>
-        <svg class="zodiac-icon" style="bottom: 8%; left: 18%;"><use href="#icon-pisces"     /></svg>
-    </div>
+
 
     <!-- HEADER -->
     <header>
@@ -536,13 +700,19 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="servicios.html" class="active">Servicios</a></li>
+                <li style="display: none;"><a href="formaciones.html">Formaciones</a></li>
                 <li><a href="articulos.html">Artículos de interés</a></li>
-                <li><a href="legal.html">Información legal</a></li>
             </ul>
         </nav>
         <div class="social-icons">
-            <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg><use href="#icon-ig" /></svg></a>
-            <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg><use href="#icon-tk" /></svg></a>
+            <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram"><svg>
+                    <use href="#icon-ig" />
+                </svg></a>
+            <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                aria-label="TikTok"><svg>
+                    <use href="#icon-tk" />
+                </svg></a>
         </div>
     </header>
 
@@ -565,6 +735,10 @@
                         <label for="nombre">Tu nombre</label>
                         <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
                     </div>
+                    <div class="form-group" style="display:none !important;">
+                        <label for="honeypot">No rellenes este campo</label>
+                        <input type="text" id="honeypot" name="_honeypot" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="form-group">
                         <label for="correo">Tu correo *</label>
                         <input type="email" id="correo" name="correo" placeholder="ejemplo@mail.com" required>
@@ -574,11 +748,15 @@
                         <textarea id="mensaje" name="mensaje" placeholder="Escribe aquí..." required></textarea>
                     </div>
                     <button type="submit" class="btn-primary">Pide Cita</button>
-                    
+
                     <!-- Elegant Success Message -->
                     <div id="form-success-msg" class="success-msg">
-                        <svg viewBox="0 0 24 24" class="success-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                        <p>Mensaje enviado.<span>En breves me pondré en contacto contigo para agendar tu cita.</span></p>
+                        <svg viewBox="0 0 24 24" class="success-icon">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        <p>Mensaje enviado.<span>En breves me pondré en contacto contigo para agendar tu cita.</span>
+                        </p>
                     </div>
                 </form>
             </div>
@@ -588,20 +766,26 @@
 
                 <div class="servicio-item">
                     <h3>Consultas</h3>
-                    <p>Esta consulta es un espacio seguro y cercano para recibir orientación clara y útil ya sea de algo que te preocupa, algo en lo que necesites profundizar o simplemente para abrirte a recibir qué mensaje principal tiene tu alma para ti.</p>
-                    <span class="servicio-tarifa">Sesión 30-40 minutos · 40€</span>
+                    <p>Esta consulta es un espacio seguro y cercano para recibir orientación clara y útil ya sea de algo
+                        que te preocupa, algo en lo que necesites profundizar o simplemente para abrirte a recibir qué
+                        mensaje principal tiene tu alma para ti.</p>
+                    <span class="servicio-tarifa">Sesión 40 minutos · 50€</span>
                 </div>
 
                 <div class="servicio-item">
                     <h3>Carta Natal</h3>
-                    <p>Esta lectura es un espacio seguro para conocerte mejor y entender tus patrones desde la astrología, sin juicios y de forma práctica para tu día a día. Tu carta natal es el mapa más honesto de quién eres y hacia dónde vas.</p>
-                    <span class="servicio-tarifa">Sesión 90 minutos · 100€</span>
+                    <p>Esta lectura es un espacio seguro para conocerte mejor y entender tus patrones desde la
+                        astrología, sin juicios y de forma práctica para tu día a día. Tu carta natal es el mapa más
+                        honesto de quién eres y hacia dónde vas.</p>
+                    <span class="servicio-tarifa">Sesión 90 minutos · 130€</span>
                 </div>
 
                 <div class="servicio-item">
                     <h3>Tránsitos</h3>
-                    <p>Esta lectura te ayuda a entender cómo los movimientos de los planetas impactan tu día a día y a tomar decisiones más conscientes, desde la claridad y la calma, sin presiones ni expectativas externas.</p>
-                    <span class="servicio-tarifa">Sesión 40-60 minutos · 70€</span>
+                    <p>Esta lectura te ayuda a entender cómo los movimientos de los planetas impactan tu día a día y a
+                        tomar decisiones más conscientes, desde la claridad y la calma, sin presiones ni expectativas
+                        externas.</p>
+                    <span class="servicio-tarifa">Sesión 60 minutos · 100€</span>
                 </div>
 
             </div>
@@ -616,215 +800,232 @@
             <div class="footer-empty"></div>
             <div class="footer-contact">
                 <h2>Contacto</h2>
-                <p>Correo electrónico: <a href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com" target="_blank" rel="noopener noreferrer" style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
+                <p>Correo electrónico: <a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=unacitaconlasestrellas@gmail.com"
+                        target="_blank" rel="noopener noreferrer"
+                        style="position:relative; z-index:100;">unacitaconlasestrellas@gmail.com</a></p>
                 <div class="footer-socials">
-                    <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z"/></svg></a>
-                    <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z"/></svg></a>
+                    <a href="https://www.instagram.com/unacitaconlasestrellas/" target="_blank"
+                        rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M7 2C4.24 2 2 4.24 2 7V17C2 19.76 4.24 22 7 22H17C19.76 22 22 19.76 22 17V7C22 4.24 19.76 2 17 2H7ZM12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7ZM18.5 4.5C19.05 4.5 19.5 4.95 19.5 5.5C19.5 6.05 19.05 6.5 18.5 6.5C17.95 6.5 17.5 6.05 17.5 5.5C17.5 4.95 17.95 4.5 18.5 4.5ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" />
+                        </svg></a>
+                    <a href="https://www.tiktok.com/@unacitaconlasestrellas" target="_blank" rel="noopener noreferrer"
+                        aria-label="TikTok"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.79-5.46-.22-1.46-.05-2.96.48-4.33.68-1.74 2.04-3.17 3.82-3.81 1.15-.4 2.4-.49 3.61-.26v4.06c-1.36-.26-2.86.13-3.76 1.19-.88.94-1.07 2.42-.51 3.56.54 1.25 1.91 2.06 3.25 1.99 1.66-.08 3.03-1.43 3.14-3.08.1-4.36.03-8.73.05-13.1z" />
+                        </svg></a>
                 </div>
             </div>
             <div class="footer-legal">
-                <a href="legal.html">Aviso legal (consulta las bases aquí)</a>
+                <a href="legal.html" target="_blank" rel="noopener noreferrer">Aviso legal (consulta las bases aquí)</a>
                 <div class="footer-copyright">© 2026. All rights reserved.</div>
             </div>
         </div>
     </footer>
 
     <script>
-        // --- Canvas Constelaciones ---
+        // --- Motor de Partículas: Efecto Huracán Estelar (Versión Servicios) ---
         const canvas = document.getElementById('interactive-layer');
-        const ctx    = canvas.getContext('2d');
-        let cw = canvas.width  = window.innerWidth;
+        const ctx = canvas.getContext('2d');
+        let cw = canvas.width = window.innerWidth;
         let ch = canvas.height = window.innerHeight;
-        let mouseX = -1000, mouseY = -1000;
-        let trails = [], nodes = [];
+
+        let mouseX = cw / 2;
+        let mouseY = ch / 2;
+        let targetMouseX = cw / 2;
+        let targetMouseY = ch / 2;
+
+        let particles = [];
 
         window.addEventListener('resize', () => {
-            cw = canvas.width  = window.innerWidth;
+            cw = canvas.width = window.innerWidth;
             ch = canvas.height = window.innerHeight;
-            initNodes();
+            initParticles();
         });
 
         document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            trails.push({ x: mouseX, y: mouseY, alpha: 0.8 });
+            targetMouseX = e.clientX;
+            targetMouseY = e.clientY;
         });
 
-        function initNodes() {
-            nodes = [];
-            for (let i = 0; i < 60; i++) {
-                nodes.push({
-                    x:  Math.random() * cw,
-                    y:  Math.random() * ch,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4
+        function initParticles() {
+            particles = [];
+
+            // 1. Estrellas doradas con haz de luz
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    type: 'star',
+                    x: Math.random() * cw,
+                    y: Math.random() * ch,
+                    baseX: Math.random() * cw,
+                    baseY: Math.random() * ch,
+                    vx: (Math.random() - 0.5) * 0.1,
+                    vy: (Math.random() - 0.5) * 0.1,
+                    size: Math.random() * 1.5 + 1.5,
+                    pulse: Math.random() * Math.PI * 2,
+                    parallax: Math.random() * 0.03 + 0.01
+                });
+            }
+
+            // 2. Partículas brillantes flotantes (Huracán denso)
+            for (let i = 0; i < 1100; i++) {
+                particles.push({
+                    type: 'dot',
+                    x: Math.random() * cw,
+                    y: Math.random() * ch,
+                    baseX: Math.random() * cw,
+                    baseY: Math.random() * ch,
+                    vx: (Math.random() - 0.5) * 0.1,
+                    vy: (Math.random() - 0.5) * 0.1,
+                    size: Math.random() * 1.5 + 0.5,
+                    pulse: Math.random() * Math.PI * 2,
+                    parallax: Math.random() * 0.015
                 });
             }
         }
-        initNodes();
 
-        // --- Drag & Drop Zodiac ---
-        const dragEls = document.querySelectorAll('.zodiac-icon');
-        let activeEl = null, initX, initY;
-
-        dragEls.forEach(el => {
-            el.addEventListener('mousedown', dragStart);
-            el.addEventListener('touchstart', dragStart, { passive: false });
-        });
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('touchmove',  drag, { passive: false });
-        document.addEventListener('mouseup',  dragEnd);
-        document.addEventListener('touchend', dragEnd);
-
-        function dragStart(e) {
-            if (e.target.closest('.zodiac-icon')) {
-                activeEl = e.target.closest('.zodiac-icon');
-                activeEl.style.animation = 'none';
-                activeEl.style.zIndex    = '100';
-                initX = e.touches ? e.touches[0].clientX : e.clientX;
-                initY = e.touches ? e.touches[0].clientY : e.clientY;
-            }
-        }
-        function drag(e) {
-            if (!activeEl) return;
-            e.preventDefault();
-            const x  = e.touches ? e.touches[0].clientX : e.clientX;
-            const y  = e.touches ? e.touches[0].clientY : e.clientY;
-            const dx = x - initX, dy = y - initY;
-            initX = x; initY = y;
-            const left = parseFloat(window.getComputedStyle(activeEl).left) || 0;
-            const top  = parseFloat(window.getComputedStyle(activeEl).top)  || 0;
-            activeEl.style.left   = (left + dx) + 'px';
-            activeEl.style.top    = (top  + dy) + 'px';
-            activeEl.style.right  = 'auto';
-            activeEl.style.bottom = 'auto';
-            trails.push({ x: left + dx + 22, y: top + dy + 22, alpha: 1.5 });
-        }
-        function dragEnd() {
-            if (activeEl) {
-                activeEl.style.animation = 'globalFloat 25s ease-in-out infinite alternate';
-                activeEl.style.zIndex    = 'unset';
-            }
-            activeEl = null;
-        }
-
-        // --- Render loop ---
         function render() {
+            // Suavizado de mouse
+            mouseX += (targetMouseX - mouseX) * 0.06;
+            mouseY += (targetMouseY - mouseY) * 0.06;
+
             ctx.clearRect(0, 0, cw, ch);
+            let time = Date.now() * 0.001;
 
-            // --- CONSTELACIONES: líneas entre nodos cercanos (siempre visibles) ---
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-                    if (dist < 150) {
-                        const alpha = (1 - dist / 150) * 0.55; // Visible con buena opacidad
-                        ctx.beginPath();
-                        ctx.moveTo(nodes[i].x, nodes[i].y);
-                        ctx.lineTo(nodes[j].x, nodes[j].y);
-                        ctx.strokeStyle = `rgba(180, 130, 20, ${alpha})`; // Dorado visible
-                        ctx.lineWidth   = 1.2;
-                        ctx.stroke();
-                    }
+            particles.forEach(p => {
+                let dx = p.x - mouseX;
+                let dy = p.y - mouseY;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+
+                let attractRadius = 800;
+                let breathingRadius = 320 + Math.sin(time * 2 + (p.baseX * 0.002)) * 35;
+
+                // --- LOGICA DE HURACÁN (Atracción + Rotación) ---
+                if (dist < attractRadius) {
+                    // 1. Atracción
+                    let pullForce = Math.pow((attractRadius - dist) / attractRadius, 1.2);
+                    p.baseX -= (dx / dist) * pullForce * (p.type === 'star' ? 1.8 : 3.5);
+                    p.baseY -= (dy / dist) * pullForce * (p.type === 'star' ? 1.8 : 3.5);
+
+                    // 2. Giro (Tangencial)
+                    let angle = Math.atan2(dy, dx);
+                    let rotateForce = (attractRadius - dist) / attractRadius * 6; // Fuerza de giro
+                    p.baseX += Math.cos(angle + Math.PI / 2) * rotateForce;
+                    p.baseY += Math.sin(angle + Math.PI / 2) * rotateForce;
                 }
-            }
 
-            // --- NODOS: puntos más grandes y visibles ---
-            for (let i = 0; i < nodes.length; i++) {
-                // Atracción al cursor
-                const d = Math.hypot(mouseX - nodes[i].x, mouseY - nodes[i].y);
-                if (d < 220) {
-                    nodes[i].x += (mouseX - nodes[i].x) * 0.012;
-                    nodes[i].y += (mouseY - nodes[i].y) * 0.012;
-                    // Línea extra hacia cursor (efecto magnético)
+                // 3. Expansión (Ojo del Huracán)
+                if (dist < breathingRadius && dist > 0) {
+                    let pushForce = Math.pow((breathingRadius - dist) / breathingRadius, 1.8);
+                    p.baseX += (dx / dist) * pushForce * 22;
+                    p.baseY += (dy / dist) * pushForce * 22;
+                }
+
+                // Movimiento libre y ruido místico
+                p.baseX += Math.sin(time + p.baseY * 0.012) * 0.35;
+                p.baseY += Math.cos(time + p.baseX * 0.012) * 0.35;
+                p.baseX += p.vx;
+                p.baseY += p.vy;
+
+                // Límites de pantalla
+                if (p.baseX > cw + 100) p.baseX = -100;
+                if (p.baseX < -100) p.baseX = cw + 100;
+                if (p.baseY > ch + 100) p.baseY = -100;
+                if (p.baseY < -100) p.baseY = ch + 100;
+
+                // Posición final
+                p.x = p.baseX;
+                p.y = p.baseY;
+                p.pulse += 0.04;
+
+                // Draw Stars
+                if (p.type === 'star') {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    let twinkle = 0.5 + 0.5 * Math.sin(p.pulse);
+                    ctx.globalAlpha = 0.4 + 0.6 * twinkle;
+                    let beam = p.size * (5 + 3 * twinkle);
+                    let thickness = p.size * 0.4;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = "#E5C07B";
+                    ctx.fillStyle = "rgba(229, 192, 123, 0.8)";
                     ctx.beginPath();
-                    ctx.moveTo(nodes[i].x, nodes[i].y);
-                    ctx.lineTo(mouseX, mouseY);
-                    ctx.strokeStyle = `rgba(200, 150, 30, ${(1 - d/220) * 0.5})`; // Dorado al cursor
-                    ctx.lineWidth   = 1;
-                    ctx.stroke();
+                    ctx.ellipse(0, 0, beam, thickness, 0, 0, Math.PI * 2);
+                    ctx.ellipse(0, 0, thickness, beam, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size * 1.2, 0, Math.PI * 2);
+                    ctx.fillStyle = "white";
+                    ctx.fill();
+                    ctx.restore();
+                } else {
+                    let twinkle = 0.6 + 0.4 * Math.sin(p.pulse);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${twinkle})`;
+                    ctx.shadowBlur = 10 * twinkle;
+                    ctx.shadowColor = "rgba(229, 192, 123, 1)";
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
                 }
-                nodes[i].x += nodes[i].vx;
-                nodes[i].y += nodes[i].vy;
-                if (nodes[i].x < 0 || nodes[i].x > cw) nodes[i].vx *= -1;
-                if (nodes[i].y < 0 || nodes[i].y > ch) nodes[i].vy *= -1;
-
-                // Punto con brillo
-                ctx.beginPath();
-                ctx.arc(nodes[i].x, nodes[i].y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(180, 130, 20, 0.85)'; // Dorado profundo
-                ctx.fill();
-                // Halo exterior
-                ctx.beginPath();
-                ctx.arc(nodes[i].x, nodes[i].y, 5, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(229, 192, 123, 0.25)'; // Halo dorado exterior
-                ctx.fill();
-            }
-
-            // Estelas del cursor (más suave)
-            trails = trails.filter(t => t.alpha > 0);
-            trails.forEach(t => {
-                ctx.beginPath();
-                ctx.arc(t.x, t.y, 4, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(220, 170, 50, ${t.alpha * 0.7})`; // Estela dorada
-                ctx.fill();
-                t.alpha -= 0.02;
             });
 
             requestAnimationFrame(render);
         }
+
+        initParticles();
         render();
 
-        // --- Formulario ---
+        // --- Manejo de Formulario (Funcionalidad original) ---
         function handleSubmit(e) {
             e.preventDefault();
             const form = e.target;
             const btn = form.querySelector('button[type="submit"]');
-            
             const originalText = btn.textContent;
+
             btn.textContent = 'Enviando...';
             btn.style.pointerEvents = 'none';
 
-            const formData = new FormData(form);
+            // Honeypot check
+            if (form.querySelector('[name="_honeypot"]').value !== "") {
+                console.warn("Spam detectado");
+                return;
+            }
 
             fetch("https://formsubmit.co/ajax/unacitaconlasestrellas@gmail.com", {
                 method: "POST",
-                headers: { 
-                    'Accept': 'application/json'
-                },
-                body: formData
+                headers: { 'Accept': 'application/json' },
+                body: new FormData(form)
             })
-            .then(response => response.json())
-            .then(data => {
-                btn.textContent = 'Enviado';
-                btn.style.background = '#2d1b5e';
-                
-                // Mostrar el mensaje de éxito elegante
-                const msgBox = document.getElementById('form-success-msg');
-                msgBox.style.display = 'flex';
-                msgBox.style.animation = 'slideUpFade 0.6s ease forwards';
-                
-                form.reset();
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                    btn.style.pointerEvents = 'auto';
-                    
-                    // Ocultar la caja restaurando estado
-                    msgBox.style.animation = '';
-                    msgBox.style.opacity = '0';
-                    setTimeout(() => msgBox.style.display = 'none', 300);
-                }, 6500);
-            })
-            .catch(error => {
-                btn.textContent = 'Error. Por favor intenta de nuevo.';
-                btn.style.background = '#8a2b2b';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                    btn.style.pointerEvents = 'auto';
-                }, 3000);
-            });
+                .then(() => {
+                    btn.textContent = 'Enviado';
+                    btn.style.background = '#2d1b5e';
+                    const msgBox = document.getElementById('form-success-msg');
+                    msgBox.style.display = 'flex';
+                    msgBox.style.animation = 'slideUpFade 0.6s ease forwards';
+                    form.reset();
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.pointerEvents = 'auto';
+                        msgBox.style.animation = '';
+                        msgBox.style.opacity = '0';
+                        setTimeout(() => msgBox.style.display = 'none', 300);
+                    }, 6500);
+                })
+                .catch(() => {
+                    btn.textContent = 'Error';
+                    btn.style.background = '#8a2b2b';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.pointerEvents = 'auto';
+                    }, 3000);
+                });
         }
     </script>
+    <script src="cookies.js" defer></script>
 </body>
+
 </html>
